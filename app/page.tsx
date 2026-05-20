@@ -424,4 +424,3 @@ function Card({ title, value, color }: any) {
     </div>
   );
 }
-

@@ -18,6 +18,9 @@ export default function Home() {
   const [data, setData] = useState<any[]>([]);
   const [lossData, setLossData] = useState<any[]>([]);
 
+  const [filterType, setFilterType] = useState('missing');
+const [visibleCount, setVisibleCount] = useState(20);
+
   // filtros
   const [inventoryDate, setInventoryDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -103,7 +106,7 @@ export default function Home() {
         const idxExpected = getIndex('expected');
         const idxAging = getIndex('aging');
         const idxHold = getIndex('hold');
-        const idxCountType = getIndex('count');
+        const idxCountType = getIndex('count type');
 
         const finalDate =
           inventoryDate || new Date().toISOString().split('T')[0];
@@ -194,7 +197,14 @@ export default function Home() {
   const expected = data.filter((i) =>
     i.expected?.toLowerCase().includes('y')
   ).length;
+  const accuracy =
+  total > 0 ? ((expected / total) * 100).toFixed(1) : 0;
 
+const getAccuracyColor = () => {
+  if (accuracy >= 95) return 'green';
+  if (accuracy >= 85) return 'yellow';
+  return 'red';
+};
   const unexpected = total - expected;
 
   const low = data.filter((i) => {
@@ -214,33 +224,52 @@ export default function Home() {
 
   const onHold = data.filter((i) => Number(i.on_hold) > 0).length;
 
-  const counted = data.filter((i) =>
-    i.count_type?.toLowerCase().includes('count')
-  ).length;
+  const backlog = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('backlog')
+).length;
 
-  const notCounted = data.filter((i) =>
-    i.count_type?.toLowerCase().includes('not')
-  ).length;
+const exception = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('exception')
+).length;
 
-  const recount = data.filter((i) =>
-    i.count_type?.toLowerCase().includes('recount')
-  ).length;
+const missorted = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('mis')
+).length;
+
+const liquidate = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('liquidate')
+).length;
+
+const missing = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('missing')
+).length;
 
   const chartData = [
-    { name: 'Low', value: low },
-    { name: 'Moderate', value: moderate },
-    { name: 'High', value: high },
+    
+    { name: 'Low Risk', value: low },
+    { name: 'Moderate Risk', value: moderate },
+    { name: 'High Risk', value: high }, 
   ];
-
+  const countChartData = [
+    { name: 'Backlog', value: backlog },
+    { name: 'Exception', value: exception },
+    { name: 'Mis-sorted', value: missorted },
+    { name: 'Liquidate', value: liquidate },
+    { name: 'Missing', value: missing },
+  ];
+  const filteredData = data.filter((item) =>
+  item.count_type?.toLowerCase().trim().includes(filterType)
+);
   return (
-    <main className="flex min-h-screen bg-black text-white">
+    <main className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="w-64 bg-zinc-900 p-6 border-r border-zinc-800">
+      <aside className="w-64 bg-white border-r border-gray-200
+ p-6 border-r border-zinc-800">
         <h2 className="text-2xl font-bold mb-8">Logistics AI</h2>
 
         <button
           onClick={() => setActiveTab('dashboard')}
-          className="block w-full text-left mb-2 hover:text-blue-400"
+          className="block w-full text-left mb-2 hover:text-orange-500"
         >
           📊 Dashboard
         </button>
@@ -270,7 +299,7 @@ export default function Home() {
 
               <button
                 onClick={() => setOpenImport(true)}
-                className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-orange-500 hover:bg-orange-600 text-white"
               >
                 Importar Inventário
               </button>
@@ -278,20 +307,20 @@ export default function Home() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-gray-800 p-2 rounded"
+                className="bg-gray-800 text-white p-2 rounded"
               />
 
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-gray-800 p-2 rounded"
+                className="bg-gray-800 text-white p-2 rounded"
               />
 
               <select
                 value={hubFilter}
                 onChange={(e) => setHubFilter(e.target.value)}
-                className="bg-gray-800 p-2 rounded"
+                className="bg-gray-800 text-white p-2 rounded"
               >
                 <option value="">Todos os HUBs</option>
                 <option value="LRJ-02">LRJ-02</option>
@@ -303,43 +332,89 @@ export default function Home() {
               </select>
             </div>
 
-            <p>Total registros: {total}</p>
-
+            <p className="text-white font-semibold">
+  Total registros: {total}
+</p>
+            
             <div className="grid grid-cols-2 md:grid-cols-7 gap-4 mb-8">
+            <Card 
+  title="Accuracy" 
+  value={`${accuracy}%`} 
+  color={getAccuracyColor()} 
+/>
               <Card title="Total" value={total} />
               <Card title="Expected" value={expected} color="green" />
               <Card title="Unexpected" value={unexpected} color="red" />
-              <Card title="Low" value={low} color="green" />
-              <Card title="Moderate" value={moderate} color="yellow" />
-              <Card title="High" value={high} color="red" />
+              <Card title="Low Risk" value={low} color="green" />
+              <Card title="Moderate Risk" value={moderate} color="yellow" />
+              <Card title="High Risk" value={high} color="red" />
               <Card title="On Hold" value={onHold} color="orange" />
-              <Card title="Counted" value={counted} color="green" />
-              <Card title="Not Counted" value={notCounted} color="red" />
-              <Card title="Recount" value={recount} color="yellow" />
+              <Card title="Backlog" value={backlog} />
+<Card title="Exception" value={exception} color="red" />
+<Card title="Mis-sorted" value={missorted} color="yellow" />
+<Card title="Liquidate" value={liquidate} color="black" />
+<Card title="Missing" value={missing} color="red" />
             </div>
 
-            <div className="bg-gray-900 p-6 rounded mb-6">
+            <div className="bg-white shadow-sm border border-gray-200 p-6 rounded mb-6">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" />
+                  <Bar dataKey="value" fill="#121824" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            <div className="bg-white p-6 rounded mb-6 border border-gray-200">
+  <h2 className="text-lg mb-4">Count Type</h2>
 
-            <table className="w-full text-sm">
-              <tbody>
-                {data.slice(0, 100).map((item, i) => (
-                  <tr key={i}>
-                    <td>{item.tracking}</td>
-                    <td>{item.sort}</td>
-                    <td>{item.expected}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={countChartData}>
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="value" fill="#121824" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+<div className="flex gap-2 mb-4">
+  {['missing', 'backlog', 'exception', 'mis-sorted', 'liquidate'].map((type) => (
+    <button
+      key={type}
+      onClick={() => setFilterType(type)}
+      className={`px-3 py-1 rounded ${
+        filterType === type ? 'bg-orange-500 text-white' : 'bg-gray-700'
+      }`}
+    >
+      {type}
+    </button>
+  ))}
+</div>
+<table className="w-full text-sm bg-white rounded overflow-hidden">
+  <thead>
+    <tr className="text-left border-b border-gray-700">
+      <th className="py-2">BR</th>
+      <th className="py-2">HUB</th>
+      <th className="py-2">AGING</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {data
+      .filter((item) =>
+        item.count_type?.toLowerCase().trim().includes(filterType)
+      )
+      .slice(0, visibleCount)
+      .map((item, i) => (
+        <tr key={i} className="border-b border-gray-800">
+          <td className="py-1">{item.tracking}</td>
+          <td>{item.hub}</td>
+          <td>{item.aging}</td>
+        </tr>
+      ))}
+  </tbody>
+</table>
           </div>
         )}
 
@@ -419,8 +494,8 @@ function Card({ title, value, color }: any) {
 
   return (
     <div className="bg-gray-900 p-4 rounded">
-      <p>{title}</p>
-      <h2 className={colors[color]}>{value}</h2>
+      <p className="text-white">{title}</p>
+      <h2 className="text-xl font-bold text-white">{value}</h2>
     </div>
   );
 }

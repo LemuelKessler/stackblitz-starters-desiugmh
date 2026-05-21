@@ -1,5 +1,10 @@
 'use client';
-
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from 'recharts';
 import { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import { supabase } from '@/lib/supabase';

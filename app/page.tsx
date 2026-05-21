@@ -612,11 +612,97 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 )}
         {/* ANALYTICS */}
         {activeTab === 'analytics' && (
-          <div>
-            <h1 className="text-3xl mb-4">Analytics</h1>
-            <p>Em breve: Pareto, insights e análises 📊</p>
-          </div>
-        )}
+  <div className="max-w-7xl mx-auto">
+
+    <h1 className="text-3xl mb-6">Analytics</h1>
+
+    {/* ===== KPIs GERAIS ===== */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <Card title="Accuracy" value={`${accuracy}%`} />
+      <Card title="Total Loss (R$)" value={`R$ ${totalLossValue}`} color="red" />
+      <Card title="Missing" value={missing} color="red" />
+      <Card title="On Hold" value={onHold} color="orange" />
+    </div>
+
+    {/* ===== LOSS POR HUB ===== */}
+    <div className="bg-white p-6 rounded mb-6 border">
+      <h2 className="mb-4 font-semibold">Loss por HUB</h2>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={Object.values(
+            filteredLossData.reduce((acc: any, item: any) => {
+              acc[item.hub] = acc[item.hub] || { hub: item.hub, value: 0 };
+              acc[item.hub].value += Number(item.value_brl || 0);
+              return acc;
+            }, {})
+          )}
+        >
+          <XAxis dataKey="hub" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#ef4444" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* ===== LOSS POR TIPO ===== */}
+    <div className="bg-white p-6 rounded mb-6 border">
+      <h2 className="mb-4 font-semibold">Loss por Tipo</h2>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={Object.values(
+            filteredLossData.reduce((acc: any, item: any) => {
+              acc[item.type] = acc[item.type] || { type: item.type, value: 0 };
+              acc[item.type].value += Number(item.value_brl || 0);
+              return acc;
+            }, {})
+          )}
+        >
+          <XAxis dataKey="type" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#f97316" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
+    <div className="bg-white p-6 rounded border">
+      <h2 className="mb-4 font-semibold">Insights</h2>
+
+      <ul className="list-disc pl-6 space-y-2">
+
+        <li>
+          HUB com maior loss:{' '}
+          {
+            Object.entries(
+              filteredLossData.reduce((acc: any, item: any) => {
+                acc[item.hub] = (acc[item.hub] || 0) + Number(item.value_brl || 0);
+                return acc;
+              }, {})
+            ).sort((a: any, b: any) => b[1] - a[1])[0]?.[0]
+          }
+        </li>
+
+        <li>
+          Total de perdas: R$ {totalLossValue}
+        </li>
+
+        <li>
+          Itens Missing: {missing}
+        </li>
+
+        <li>
+          Itens On Hold: {onHold}
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+)}
       </div>
       {openImport && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">

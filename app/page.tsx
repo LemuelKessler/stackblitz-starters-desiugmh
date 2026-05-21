@@ -175,13 +175,17 @@ const [visibleCount, setVisibleCount] = useState(20);
         }
 
         const formatted = rows.slice(1).map((row: any) => ({
-          tracking: row[idxTracking] || '',
-          status: row[getIndex('status')] || '',
+          tracking: row[getIndex('tracking')] || '',
           type: row[getIndex('type')] || '',
+          value_brl: row[getIndex('value_brl')] || 0,
           hub: row[getIndex('hub')] || '',
+          status: row[getIndex('status')] || '',
+          description: row[getIndex('description')] || '',
+          loss_date: row[getIndex('loss_date')] || '',
+          responsibility: row[getIndex('responsibility')] || '',
+          observation: row[getIndex('observation')] || '',
           created_at: new Date().toISOString().split('T')[0],
-        }));
-
+          }));
         const valid = formatted.filter((i) => i.tracking);
 
         await supabase.from('loss_prevention').insert(valid);

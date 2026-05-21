@@ -396,15 +396,15 @@ const pieData = [
       {/* MOBILE MENU */}
 <div className="md:hidden flex justify-around bg-white border-b p-2">
   <button onClick={() => setActiveTab('dashboard')}>
-    📊
+    📊 Dashboard
   </button>
 
   <button onClick={() => setActiveTab('loss')}>
-    ⚠️
+    ⚠️ Loss Prevention
   </button>
 
   <button onClick={() => setActiveTab('analytics')}>
-    📈
+    📈 Analytic
   </button>
 </div>
       <div className="flex-1 p-3 md:p-6 overflow-auto">

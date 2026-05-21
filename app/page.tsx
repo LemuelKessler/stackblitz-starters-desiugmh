@@ -306,44 +306,67 @@ const missing = data.filter((i) =>
         {/* DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="max-w-7xl mx-auto">
-            <div className="flex gap-4 mb-6 flex-wrap items-center">
-              <h1 className="text-4xl font-bold">Inventory Dashboard</h1>
+            <div className="mb-6">
 
-              <button
-                onClick={() => setOpenImport(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition"
-              >
-                Importar Inventário
-              </button>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="bg-gray-800 text-white p-2 rounded"
-              />
+{/* HEADER */}
+<div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-4">
+  
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900">
+      Inventory Dashboard
+    </h1>
+    <p className="text-sm text-gray-500">
+      Monitoramento em tempo real dos Hubs
+    </p>
+  </div>
 
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="bg-gray-800 text-white p-2 rounded"
-              />
+  <div className="bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold">
+    {total} registros
+  </div>
 
-              <select
-                value={hubFilter}
-                onChange={(e) => setHubFilter(e.target.value)}
-                className="bg-gray-800 text-white p-2 rounded"
-              >
-                <option value="">Todos os HUBs</option>
-                <option value="LRJ-02">LRJ-02</option>
-                <option value="LRJ-08">LRJ-08</option>
-                <option value="LRJ-13">LRJ-13</option>
-                <option value="LRJ-15">LRJ-15</option>
-                <option value="LRJ-19">LRJ-19</option>
-                <option value="LRJ-23">LRJ-23</option>
-              </select>
-            </div>
+</div>
 
+{/* FILTROS */}
+<div className="flex gap-4 flex-wrap items-center">
+
+  <button
+    onClick={() => setOpenImport(true)}
+    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+  >
+    Importar Inventário
+  </button>
+
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    className="bg-gray-800 text-white p-2 rounded"
+  />
+
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    className="bg-gray-800 text-white p-2 rounded"
+  />
+
+  <select
+    value={hubFilter}
+    onChange={(e) => setHubFilter(e.target.value)}
+    className="bg-gray-800 text-white p-2 rounded"
+  >
+    <option value="">Todos os HUBs</option>
+    <option value="LRJ-02">LRJ-02</option>
+    <option value="LRJ-08">LRJ-08</option>
+    <option value="LRJ-13">LRJ-13</option>
+    <option value="LRJ-15">LRJ-15</option>
+    <option value="LRJ-19">LRJ-19</option>
+    <option value="LRJ-23">LRJ-23</option>
+  </select>
+
+</div>
+
+</div>
             <p className="text-white font-semibold">
   Total registros: {total}
 </p>

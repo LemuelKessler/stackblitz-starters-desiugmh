@@ -361,7 +361,7 @@ const pieData = [
       {/* SIDEBAR */}
       <aside className="w-64 bg-white border-r border-gray-200 p-6">
   <h2 className="text-2xl font-bold mb-8 text-gray-800">
-    Inventory Control
+    Logistics AI
   </h2>
 
   <button

@@ -354,7 +354,7 @@ const pieData = [
   return (
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="hidden md:block md:w-64 bg-white border-r border-gray-200 p-6">
+      <aside className="hidden md:block md:w-64 bg-white border-r border-gray-200 p-3 md:p-6">
       <h2 className="text-2xl font-bold mb-8 text-gray-800">
   Inventory Control
 </h2>
@@ -393,14 +393,14 @@ const pieData = [
   </button>
 </aside>
       {/* CONTEÚDO */}
-      <div className="flex-1 p-6 overflow-auto">
+      <div className="flex-1 p-3 md:p-6 overflow-auto">
         {/* DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="max-w-7xl mx-auto">
             <div className="mb-6">
 
 {/* HEADER */}
-<div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-4">
+<div className="flex justify-between items-center bg-white p-3 md:p-6 rounded-xl shadow-sm border border-gray-200 mb-4">
   
   <div>
     <h1 className="text-2xl font-bold text-gray-900">
@@ -485,7 +485,7 @@ const pieData = [
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
   {/* RISK LEVEL */}
-  <div className="bg-white shadow-sm border border-gray-200 p-6 rounded">
+  <div className="bg-white shadow-sm border border-gray-200 p-3 md:p-6 rounded">
     <h2 className="mb-4 font-semibold">Risk Level</h2>
 
     <ResponsiveContainer width="100%" height={250}>
@@ -499,7 +499,7 @@ const pieData = [
   </div>
 
   {/* COUNT TYPE */}
-  <div className="bg-white p-6 rounded border border-gray-200">
+  <div className="bg-white p-3 md:p-6 rounded border border-gray-200">
     <h2 className="mb-4 font-semibold">Count Type</h2>
 
     <ResponsiveContainer width="100%" height={300}>
@@ -599,7 +599,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 <Card title="Solid" value={solid} />
 <Card title="Liquid" value={liquid} />
 </div>
-<div className="bg-white p-6 rounded mb-6 border">
+<div className="bg-white p-3 md:p-6 rounded mb-6 border">
   <h2 className="mb-4 font-semibold">Lost vs Damaged</h2>
 
   <ResponsiveContainer width="100%" height={250}>
@@ -656,7 +656,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
     </div>
 
     {/* ===== LOSS POR HUB ===== */}
-    <div className="bg-white p-6 rounded mb-6 border">
+    <div className="bg-white p-3 md:p-6 rounded mb-6 border">
       <h2 className="mb-4 font-semibold">Loss por HUB</h2>
 
       <ResponsiveContainer width="100%" height={300}>
@@ -677,7 +677,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       </ResponsiveContainer>
     </div>
 {/* ===== PIE CHART LOST vs DAMAGED ===== */}
-<div className="bg-white p-6 rounded mb-6 border">
+<div className="bg-white p-3 md:p-6 rounded mb-6 border">
   <h2 className="mb-4 font-semibold">Lost vs Damaged (%)</h2>
 
   <ResponsiveContainer width="100%" height={300}>
@@ -700,7 +700,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </ResponsiveContainer>
 </div>
     {/* ===== LOSS POR TIPO ===== */}
-    <div className="bg-white p-6 rounded mb-6 border">
+    <div className="bg-white p-3 md:p-6 rounded mb-6 border">
       <h2 className="mb-4 font-semibold">Loss por Tipo</h2>
 
       <ResponsiveContainer width="100%" height={300}>
@@ -721,7 +721,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       </ResponsiveContainer>
     </div>
 {/* ===== RANKING RESPONSÁVEIS ===== */}
-<div className="bg-white p-6 rounded mb-6 border">
+<div className="bg-white p-3 md:p-6 rounded mb-6 border">
   <h2 className="mb-4 font-semibold">Ranking de Responsáveis</h2>
 
   <table className="w-full text-sm">
@@ -767,7 +767,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </table>
 </div>
     {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
-    <div className="bg-white p-6 rounded border">
+    <div className="bg-white p-3 md:p-6 rounded border">
       <h2 className="mb-4 font-semibold">Insights</h2>
 
       <ul className="list-disc pl-6 space-y-2">
@@ -805,7 +805,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       {openImport && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           
-          <div className="bg-white p-6 rounded-xl w-[420px] shadow-xl">
+          <div className="bg-white p-3 md:p-6 rounded-xl w-[420px] shadow-xl">
             
 
 <h2 className="text-xl font-bold mb-4 text-gray-800">
@@ -884,7 +884,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 )}     
 {openLossImport && (
 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-<div className="bg-white p-6 rounded-xl w-[420px] shadow-xl">
+<div className="bg-white p-3 md:p-6 rounded-xl w-[420px] shadow-xl">
 
 <h2 className="text-xl font-bold mb-4 text-gray-800">
  Importar Loss

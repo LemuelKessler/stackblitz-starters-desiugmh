@@ -332,13 +332,12 @@ const totalLossValue = lossData.reduce(
    0
    );
 
-const solid = lossData.filter((i) =>
-  i.type?.toLowerCase().includes('solid')
-).length;
-
-const liquid = lossData.filter((i) =>
-  i.type?.toLowerCase().includes('liquid')
-).length;
+   const solid = filteredLossData.filter((i) =>
+   i.type?.toLowerCase().includes('solid')
+   ).length;
+   const liquid = filteredLossData.filter((i) =>
+   i.type?.toLowerCase().includes('liquid')
+   ).length;
   return (
     <main className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}

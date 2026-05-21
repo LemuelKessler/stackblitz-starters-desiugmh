@@ -263,32 +263,44 @@ const missing = data.filter((i) =>
   return (
     <main className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="w-64 bg-white border-r border-gray-200
- p-6 border-r border-zinc-800">
-        <h2 className="text-2xl font-bold mb-8">Logistics AI</h2>
+      <aside className="w-64 bg-white border-r border-gray-200 p-6">
+  <h2 className="text-2xl font-bold mb-8 text-gray-800">
+    Logistics AI
+  </h2>
 
-        <button
-          onClick={() => setActiveTab('dashboard')}
-          className="block w-full text-left mb-2 hover:text-orange-500"
-        >
-          📊 Dashboard
-        </button>
+  <button
+    onClick={() => setActiveTab('dashboard')}
+    className={`block w-full text-left mb-3 px-3 py-2 rounded-lg transition ${
+      activeTab === 'dashboard'
+        ? 'bg-orange-100 text-orange-500 font-semibold'
+        : 'text-gray-600 hover:text-orange-500 hover:bg-gray-100'
+    }`}
+  >
+    📊 Dashboard
+  </button>
 
-        <button
-          onClick={() => setActiveTab('loss')}
-          className="block w-full text-left mb-2 hover:text-red-400"
-        >
-          ⚠️ Loss Prevention
-        </button>
+  <button
+    onClick={() => setActiveTab('loss')}
+    className={`block w-full text-left mb-3 px-3 py-2 rounded-lg transition ${
+      activeTab === 'loss'
+        ? 'bg-orange-100 text-orange-500 font-semibold'
+        : 'text-gray-600 hover:text-orange-500 hover:bg-gray-100'
+    }`}
+  >
+    ⚠️ Loss Prevention
+  </button>
 
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className="block w-full text-left hover:text-purple-400"
-        >
-          📈 Analytics
-        </button>
-      </aside>
-
+  <button
+    onClick={() => setActiveTab('analytics')}
+    className={`block w-full text-left px-3 py-2 rounded-lg transition ${
+      activeTab === 'analytics'
+        ? 'bg-orange-100 text-orange-500 font-semibold'
+        : 'text-gray-600 hover:text-orange-500 hover:bg-gray-100'
+    }`}
+  >
+    📈 Analytics
+  </button>
+</aside>
       {/* CONTEÚDO */}
       <div className="flex-1 p-6 overflow-auto">
         {/* DASHBOARD */}

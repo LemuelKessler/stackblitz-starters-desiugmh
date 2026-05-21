@@ -481,43 +481,36 @@ const pieData = [
 <Card title="Missing" value={missing} color="red" />
             </div>
 
-            <div className="bg-white shadow-sm border border-gray-200 p-6 rounded mb-6">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
-                <XAxis dataKey="name" tick={{ fill: '#6b7280' }} />
-<YAxis tick={{ fill: '#6b7280' }} />
-                  <Tooltip
-    contentStyle={{
-      backgroundColor: '#fff',
-      border: '1px solid #e5e7eb',
-      borderRadius: '8px',
-    }}
-    labelStyle={{ color: '#374151' }}
-  />
-                  <Bar dataKey="value" fill="#f97316" radius={[6, 6, 0, 0]} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="bg-white p-6 rounded mb-6 border border-gray-200">
-  <h2 className="text-lg mb-4">Count Type</h2>
+  {/* RISK LEVEL */}
+  <div className="bg-white shadow-sm border border-gray-200 p-6 rounded">
+    <h2 className="mb-4 font-semibold">Risk Level</h2>
 
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={countChartData}>
-    <XAxis dataKey="name" tick={{ fill: '#6b7280' }} />
-<YAxis tick={{ fill: '#6b7280' }} />
-<Tooltip
-    contentStyle={{
-      backgroundColor: '#fff',
-      border: '1px solid #e5e7eb',
-      borderRadius: '8px',
-    }}
-    labelStyle={{ color: '#374151' }}
-  />
-      <Bar dataKey="value" fill="#f97316" radius={[6, 6, 0, 0]} />
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={chartData}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="value" fill="#f97316" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
 
-    </BarChart>
-  </ResponsiveContainer>
+  {/* COUNT TYPE */}
+  <div className="bg-white p-6 rounded border border-gray-200">
+    <h2 className="mb-4 font-semibold">Count Type</h2>
+
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={countChartData}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="value" fill="#ef4444" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+
 </div>
 <div className="flex gap-2 mb-4">
   {['missing', 'backlog', 'exception', 'mis-sorted', 'liquidate'].map((type) => (

@@ -177,7 +177,9 @@ const [visibleCount, setVisibleCount] = useState(20);
         const formatted = rows.slice(1).map((row: any) => ({
           tracking: row[getIndex('tracking')] || '',
           type: row[getIndex('type')] || '',
-          value_brl: Number(row[getIndex('value_brl')]?.replace(',', '.')) || 0,
+          value_brl: parseFloat(
+            row[getIndex('value_brl')]?.replace(',', '.') || '0'
+          ),
           hub: row[getIndex('hub')] || '',
           status: row[getIndex('status')] || '',
           description: row[getIndex('description')] || '',

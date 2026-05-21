@@ -181,7 +181,7 @@ const [visibleCount, setVisibleCount] = useState(20);
           hub: row[getIndex('hub')] || '',
           status: row[getIndex('status')] || '',
           description: row[getIndex('description')] || '',
-          loss_date: row[getIndex('loss_date')] || '',
+          loss_date: new Date(row[getIndex('loss_date')]).toISOString().split('T')[0],
           responsibility: row[getIndex('responsibility')] || '',
           observation: row[getIndex('observation')] || '',
           root_cause: row[getIndex('root_cause')] || '',

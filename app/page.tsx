@@ -393,6 +393,20 @@ const pieData = [
   </button>
 </aside>
       {/* CONTEÚDO */}
+      {/* MOBILE MENU */}
+<div className="md:hidden flex justify-around bg-white border-b p-2">
+  <button onClick={() => setActiveTab('dashboard')}>
+    📊
+  </button>
+
+  <button onClick={() => setActiveTab('loss')}>
+    ⚠️
+  </button>
+
+  <button onClick={() => setActiveTab('analytics')}>
+    📈
+  </button>
+</div>
       <div className="flex-1 p-3 md:p-6 overflow-auto">
         {/* DASHBOARD */}
         {activeTab === 'dashboard' && (

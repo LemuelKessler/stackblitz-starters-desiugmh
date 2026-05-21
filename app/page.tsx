@@ -542,8 +542,6 @@ const missing = data.filter((i) =>
   <div className="max-w-6xl mx-auto">
 
     <h1 className="text-3xl mb-4">Loss Prevention</h1>
-    <h1 className="text-3xl mb-4">Loss Prevention</h1>
-
 <div className="flex gap-2 mb-4">
   <input
     type="date"

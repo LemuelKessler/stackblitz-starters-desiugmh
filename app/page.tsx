@@ -535,8 +535,12 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 
     </div>
 
-    <p>Total perdas: {lossData.length}</p>
-
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<Card title="Total Loss" value={lossData.length} />
+<Card title="Valor Total (R$)" value={`R$ ${totalLossValue}`} color="red" />
+<Card title="Solid" value={solid} />
+<Card title="Liquid" value={liquid} />
+</div>
 <table className="w-full text-sm bg-white rounded overflow-hidden mt-4">
   <thead>
     <tr className="border-b">

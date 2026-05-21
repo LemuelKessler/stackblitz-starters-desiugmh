@@ -352,9 +352,9 @@ const pieData = [
    i.type?.toLowerCase().includes('liquid')
    ).length;
   return (
-    <main className="flex min-h-screen bg-gray-100 text-gray-800">
+    <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="w-64 bg-white border-r border-gray-200 p-6">
+      <aside className="w-full md:w-64 bg-white border-b md:border-r border-gray-200 p-4 md:p-6">
       <h2 className="text-2xl font-bold mb-8 text-gray-800">
   Inventory Control
 </h2>
@@ -462,7 +462,7 @@ const pieData = [
  Total registros: {total}
 </p>
             
-            <div className="grid grid-cols-2 md:grid-cols-7 gap-4 mb-8">
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 mb-8">
             <Card 
   title="Accuracy" 
   value={`${accuracy}%`} 
@@ -488,7 +488,7 @@ const pieData = [
   <div className="bg-white shadow-sm border border-gray-200 p-6 rounded">
     <h2 className="mb-4 font-semibold">Risk Level</h2>
 
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={250}>
       <BarChart data={chartData}>
         <XAxis dataKey="name" />
         <YAxis />
@@ -528,7 +528,8 @@ const pieData = [
     </button>
   ))}
 </div>
-<table className="w-full text-sm bg-white rounded overflow-hidden">
+<div className="overflow-x-auto">
+  <table className="w-full text-sm bg-white rounded">
   <thead>
     <tr className="text-left border-b border-gray-700">
       <th className="py-2">BR</th>
@@ -538,6 +539,7 @@ const pieData = [
   </thead>
 
   <tbody>
+    
     {data
       .filter((item) =>
         item.count_type?.toLowerCase().trim().includes(filterType)
@@ -552,8 +554,9 @@ const pieData = [
       ))}
   </tbody>
 </table>
-          </div>
-        )}
+</div>
+  </div>
+)}
 
         {/* LOSS */}
         {activeTab === 'loss' && (

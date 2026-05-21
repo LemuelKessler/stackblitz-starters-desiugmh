@@ -495,7 +495,38 @@ const pieData = [
 <Card title="Liquidate" value={liquidate} color="black" />
 <Card title="Missing" value={missing} color="red" />
             </div>
+{/* ALERTAS AUTOMÁTICOS */}
+<div className="bg-white p-4 rounded mb-4 border">
+  <h2 className="font-semibold mb-2">🚨 Alertas</h2>
 
+  <ul className="space-y-2 text-sm">
+
+    {accuracy < 90 && (
+      <li className="text-red-500">
+        ⚠️ Acuracidade baixa ({accuracy}%)
+      </li>
+    )}
+
+    {high > moderate && (
+      <li className="text-orange-500">
+        🔥 Muitos itens em High Risk
+      </li>
+    )}
+
+    {missing > 50 && (
+      <li className="text-red-500">
+        📦 Alto volume de Missing ({missing})
+      </li>
+    )}
+
+    {onHold > 30 && (
+      <li className="text-yellow-500">
+        ⏳ Muitos itens On Hold
+      </li>
+    )}
+
+  </ul>
+</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
   {/* RISK LEVEL */}

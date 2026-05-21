@@ -215,8 +215,7 @@ const [visibleCount, setVisibleCount] = useState(20);
     i.expected?.toLowerCase().includes('y')
   ).length;
   const accuracy =
-  total > 0 ? ((expected / total) * 100).toFixed(1) : 0;
-
+total > 0 ? Number(((expected / total) * 100).toFixed(1)) : 0;
 const getAccuracyColor = () => {
   if (accuracy >= 95) return 'green';
   if (accuracy >= 85) return 'yellow';

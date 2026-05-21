@@ -332,13 +332,7 @@ const damagedCount = filteredLossData.filter((i) =>
   i.status?.toLowerCase().includes('damaged') ||
   i.status?.toLowerCase().includes('avaria')
 ).length;
-  const lostCount = filteredLossData.filter((i) =>
-  i.status?.toLowerCase().includes('lost')
-).length;
-
-const damagedCount = filteredLossData.filter((i) =>
-  i.status?.toLowerCase().includes('damaged')
-).length;
+  
 
 const pieData = [
   { name: 'Lost', value: lostCount },

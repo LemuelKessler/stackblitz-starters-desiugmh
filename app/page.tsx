@@ -252,10 +252,14 @@ const COLORS = ['#ef4444', '#f97316']; // vermelho e laranja
   const expected = data.filter((i) =>
     i.expected?.toLowerCase().includes('y')
   ).length;
+  const missing = data.filter((i) =>
+  i.count_type?.toLowerCase().includes('missing')
+).length;
   const totalBipado = total - missing;
 
 const accuracy =
 total > 0 ? Number(((totalBipado / total) * 100).toFixed(1)) : 0;
+
 const getAccuracyColor = () => {
   if (accuracy >= 95) return 'green';
   if (accuracy >= 85) return 'yellow';
@@ -295,11 +299,6 @@ const missorted = data.filter((i) =>
 const liquidate = data.filter((i) =>
   i.count_type?.toLowerCase().includes('liquidate')
 ).length;
-
-const missing = data.filter((i) =>
-  i.count_type?.toLowerCase().includes('missing')
-).length;
-
   const chartData = [
     
     { name: 'Low Risk', value: low },

@@ -136,11 +136,9 @@ const [visibleCount, setVisibleCount] = useState(20);
           on_hold: row[idxHold] || '0',
           count_type: row[idxCountType] || '',
           inventory_date: finalDate,
-
-          // 🔥 NOVO (ESSENCIAL)
           hub: hub,
-        }));
-
+          }));
+          
         const valid = formatted.filter((i) => i.tracking);
 
         await supabase.from('inventory').insert(valid);
@@ -174,21 +172,38 @@ const [visibleCount, setVisibleCount] = useState(20);
           return;
         }
 
-        const formatted = rows.slice(1).map((row: any) => ({
+        const formatted = rows.slice(1).map((row: any) => {
+          const rawDate = row[getIndex('loss_date')];
+          
+          let formattedDate = null;
+          
+          if (rawDate) {
+          if (rawDate.includes('/')) {
+          const [day, month, year] = rawDate.split('/');
+          formattedDate = `${year}-${month}-${day}`;
+          } else {
+          formattedDate = rawDate;
+          }
+          }
+          
+          return {
           tracking: row[getIndex('tracking')] || '',
           type: row[getIndex('type')] || '',
           value_brl: parseFloat(
-            row[getIndex('value_brl')]?.replace(',', '.') || '0'
+          (row[getIndex('value_brl')] || '0')
+          .replace(/\./g, '')
+          .replace(',', '.')
           ),
           hub: row[getIndex('hub')] || '',
           status: row[getIndex('status')] || '',
           description: row[getIndex('description')] || '',
-          loss_date: new Date(row[getIndex('loss_date')]).toISOString().split('T')[0],
+          loss_date: formattedDate,
           responsibility: row[getIndex('responsibility')] || '',
           observation: row[getIndex('observation')] || '',
           root_cause: row[getIndex('root_cause')] || '',
           created_at: new Date().toISOString().split('T')[0],
-          }));
+          };
+          });
         const valid = formatted.filter((i) => i.tracking);
 
         const { data, error } = await supabase

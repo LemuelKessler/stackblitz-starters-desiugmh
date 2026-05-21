@@ -245,6 +245,20 @@ fetchLoss();
   // ==========================
   // MÉTRICAS
   // ==========================
+  const lostCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('lost')
+).length;
+
+const damagedCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('damaged')
+).length;
+
+const pieData = [
+  { name: 'Lost', value: lostCount },
+  { name: 'Damaged', value: damagedCount },
+];
+
+const COLORS = ['#ef4444', '#f97316']; // vermelho e laranja
   const total = data.length;
 
   const expected = data.filter((i) =>
@@ -650,7 +664,29 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
         </BarChart>
       </ResponsiveContainer>
     </div>
+{/* ===== PIE CHART LOST vs DAMAGED ===== */}
+<div className="bg-white p-6 rounded mb-6 border">
+  <h2 className="mb-4 font-semibold">Lost vs Damaged (%)</h2>
 
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
+      <Pie
+        data={pieData}
+        dataKey="value"
+        nameKey="name"
+        outerRadius={100}
+        label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+      >
+        {pieData.map((entry, index) => (
+          <Cell key={index} fill={COLORS[index]} />
+        ))}
+      </Pie>
+
+      <Tooltip />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+</div>
     {/* ===== LOSS POR TIPO ===== */}
     <div className="bg-white p-6 rounded mb-6 border">
       <h2 className="mb-4 font-semibold">Loss por Tipo</h2>

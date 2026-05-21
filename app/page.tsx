@@ -354,7 +354,7 @@ const pieData = [
   return (
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="w-full md:w-64 bg-white border-b md:border-r border-gray-200 p-4 md:p-6">
+      <aside className="hidden md:block md:w-64 bg-white border-r border-gray-200 p-6">
       <h2 className="text-2xl font-bold mb-8 text-gray-800">
   Inventory Control
 </h2>

@@ -513,7 +513,7 @@ const pieData = [
 
 </div>
 <div className="flex gap-2 mb-4">
-  {['missing', 'backlog', 'exception', 'mis-sorted', 'liquidate'].map((type) => (
+  {['Missing', 'Backlog', 'Exception', 'Mis-sorted', 'Liquidate'].map((type) => (
     <button
       key={type}
       onClick={() => setFilterType(type)}

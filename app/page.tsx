@@ -318,10 +318,19 @@ const totalLossValue = lossData.reduce(
  const liquid = lossData.filter((i) =>
  i.type?.toLowerCase().includes('liquid')
  ).length;
-const totalLossValue = lossData.reduce(
-  (acc, item) => acc + Number(item.value_brl || 0),
-  0
-);
+ const filteredLossData = lossData.filter((item) => {
+  if (!item.loss_date) return true;
+  
+  if (lossStartDate && lossEndDate) {
+  return item.loss_date >= lossStartDate && item.loss_date <= lossEndDate;
+  }
+  
+  return true;
+  });
+  const totalLossValue = filteredLossData.reduce(
+    (acc, item) => acc + Number(item.value_brl || 0),
+   0
+   );
 
 const solid = lossData.filter((i) =>
   i.type?.toLowerCase().includes('solid')

@@ -473,13 +473,28 @@ const missing = data.filter((i) =>
 
         {/* LOSS */}
         {activeTab === 'loss' && (
-          <div>
-            <h1 className="text-3xl mb-4">Loss Prevention</h1>
-            <input type="file" onChange={uploadLoss} />
-            <p>Total perdas: {lossData.length}</p>
-          </div>
-        )}
+  <div className="max-w-6xl mx-auto">
 
+    <h1 className="text-3xl mb-4">Loss Prevention</h1>
+
+    {/* BOTÕES */}
+    <div className="flex gap-3 mb-4">
+      
+      <button
+        onClick={downloadLossTemplate}
+        className="bg-gray-800 text-white px-4 py-2 rounded"
+      >
+        Baixar Template
+      </button>
+
+      <input type="file" onChange={uploadLoss} />
+
+    </div>
+
+    <p>Total perdas: {lossData.length}</p>
+
+  </div>
+)}
         {/* ANALYTICS */}
         {activeTab === 'analytics' && (
           <div>

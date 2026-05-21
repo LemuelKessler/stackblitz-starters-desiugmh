@@ -252,8 +252,10 @@ const COLORS = ['#ef4444', '#f97316']; // vermelho e laranja
   const expected = data.filter((i) =>
     i.expected?.toLowerCase().includes('y')
   ).length;
-  const accuracy =
-total > 0 ? Number(((expected / total) * 100).toFixed(1)) : 0;
+  const totalBipado = total - missing;
+
+const accuracy =
+total > 0 ? Number(((totalBipado / total) * 100).toFixed(1)) : 0;
 const getAccuracyColor = () => {
   if (accuracy >= 95) return 'green';
   if (accuracy >= 85) return 'yellow';
@@ -513,7 +515,7 @@ const pieData = [
 
 </div>
 <div className="flex gap-2 mb-4">
-  {['Missing', 'Backlog', 'Exception', 'Mis-sorted', 'Liquidate'].map((type) => (
+  {['missing', 'backlog', 'exception', 'mis-sorted', 'liquidate'].map((type) => (
     <button
       key={type}
       onClick={() => setFilterType(type)}

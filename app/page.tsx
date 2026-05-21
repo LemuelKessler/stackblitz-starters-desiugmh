@@ -317,9 +317,15 @@ const missing = data.filter((i) =>
  const filteredLossData = lossData.filter((item) => {
   if (!item.loss_date) return true;
   
-  if (lossStartDate && lossEndDate) {
-  return item.loss_date >= lossStartDate && item.loss_date <= lossEndDate;
-  }
+  const lostCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('lost') ||
+  i.type?.toLowerCase().includes('extravio')
+).length;
+
+const damagedCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('damaged') ||
+  i.type?.toLowerCase().includes('avaria')
+).length;
   
   return true;
   });

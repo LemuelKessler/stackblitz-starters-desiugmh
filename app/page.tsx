@@ -395,8 +395,10 @@ const missing = data.filter((i) =>
     <button
       key={type}
       onClick={() => setFilterType(type)}
-      className={`px-3 py-1 rounded ${
-        filterType === type ? 'bg-orange-500 text-white' : 'bg-gray-700'
+      className={`px-3 py-1 rounded-lg text-sm transition ${
+        filterType === type
+          ? 'bg-orange-500 text-white shadow-sm'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
       }`}
     >
       {type}
@@ -484,7 +486,7 @@ const missing = data.filter((i) =>
 
             <button
               onClick={() => setOpenImport(false)}
-              className="w-full bg-red-600 p-2 rounded"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
             >
               Fechar
             </button>

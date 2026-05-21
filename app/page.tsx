@@ -191,10 +191,20 @@ const [visibleCount, setVisibleCount] = useState(20);
           }));
         const valid = formatted.filter((i) => i.tracking);
 
-        await supabase.from('loss_prevention').insert(valid);
+        const { data, error } = await supabase
+  .from('loss_prevention')
+  .insert(valid);
 
-        alert('Upload Loss 🚀');
-        fetchLoss();
+console.log('DADOS:', valid);
+console.log('ERRO:', error);
+
+if (error) {
+  alert('Erro ao subir ❌');
+  return;
+}
+
+alert('Upload Loss 🚀');
+fetchLoss();
       },
     });
   };

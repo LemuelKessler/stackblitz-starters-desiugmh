@@ -367,8 +367,8 @@ const missing = data.filter((i) =>
 </div>
 
 </div>
-            <p className="text-white font-semibold">
-  Total registros: {total}
+<p className="text-gray-700 font-semibold">
+ Total registros: {total}
 </p>
             
             <div className="grid grid-cols-2 md:grid-cols-7 gap-4 mb-8">
@@ -562,9 +562,12 @@ const missing = data.filter((i) =>
 </div>
 
 </div>
-      )}
-    </main>
-  );
+
+</div>  {/* fecha o fundo escuro */}
+)}     {/* fecha o openImport */}
+
+</main>
+);
 }
 
 // CARD

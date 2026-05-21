@@ -563,7 +563,7 @@ const missing = data.filter((i) =>
 
 </div>
 
-</div>  {/* fecha o fundo escuro */}
+</div>  
 )}     {/* fecha o openImport */}
 
 </main>
@@ -581,17 +581,16 @@ function Card({ title, value, color }: any) {
 
   return (
     <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
-      
-      <p className="text-sm text-gray-500">
-        {title}
-      </p>
-
-      <h2 className={`text-2xl font-bold ${
-        color ? colors[color] : 'text-gray-900'
-      }`}>
-        {value}
-      </h2>
-
+    <p className="text-sm text-gray-500">
+    {title}
+    </p>
+    
+    <h2 className={`text-2xl font-bold ${
+    color ? colors[color] : 'text-gray-900'
+    }`}>
+    {value}
+    </h2>
+    
     </div>
-  );
-}
+    );
+    }

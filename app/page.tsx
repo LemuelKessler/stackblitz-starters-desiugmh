@@ -587,7 +587,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </thead>
 
   <tbody>
-    {lossData.map((item, i) => (
+  {filteredLossData.map((item, i) => (
       <tr key={i} className="border-b">
         <td>{item.tracking}</td>
         <td>{item.type}</td>

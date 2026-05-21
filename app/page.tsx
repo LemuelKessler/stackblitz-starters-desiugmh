@@ -510,6 +510,32 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 
     <p>Total perdas: {lossData.length}</p>
 
+<table className="w-full text-sm bg-white rounded overflow-hidden mt-4">
+  <thead>
+    <tr className="border-b">
+      <th>Tracking</th>
+      <th>Tipo</th>
+      <th>Valor (R$)</th>
+      <th>HUB</th>
+      <th>Status</th>
+      <th>Responsável</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {lossData.map((item, i) => (
+      <tr key={i} className="border-b">
+        <td>{item.tracking}</td>
+        <td>{item.type}</td>
+        <td>{item.value_brl}</td>
+        <td>{item.hub}</td>
+        <td>{item.status}</td>
+        <td>{item.responsibility}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
   </div>
 )}
         {/* ANALYTICS */}

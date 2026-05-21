@@ -374,7 +374,7 @@ const missing = data.filter((i) =>
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#121824" />
+                  <Bar dataKey="value" fill="#f97316" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -386,7 +386,7 @@ const missing = data.filter((i) =>
       <XAxis dataKey="name" />
       <YAxis />
       <Tooltip />
-      <Bar dataKey="value" fill="#121824" />
+      <Bar dataKey="value" fill="#f97316" />
     </BarChart>
   </ResponsiveContainer>
 </div>

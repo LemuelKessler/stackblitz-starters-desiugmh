@@ -497,12 +497,12 @@ const missing = data.filter((i) =>
     {/* BOTÕES */}
     <div className="flex gap-3 mb-4">
       
-      <button
-        onClick={downloadLossTemplate}
-        className="bg-gray-800 text-white px-4 py-2 rounded"
-      >
-        Baixar Template
-      </button>
+    <button
+onClick={() => window.open('https://docs.google.com/spreadsheets/d/1h43SveNtsmxtTOl_72DLoxHB51H4nM-5aIKv1VgKyEU/copy')}
+className="bg-gray-800 text-white px-4 py-2 rounded"
+>
+ Baixar Template
+</button>
 
       <input type="file" onChange={uploadLoss} />
 

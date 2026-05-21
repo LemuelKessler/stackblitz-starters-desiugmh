@@ -18,6 +18,19 @@ export default function Home() {
   const [data, setData] = useState<any[]>([]);
   const [lossData, setLossData] = useState<any[]>([]);
 
+  const downloadLossTemplate = () => {
+    const csv = `tracking,type,value_brl,hub,status,description,loss_date,responsibility,root_cause,observation
+`;
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'loss_template.csv';
+    a.click();
+  };
+
   const [filterType, setFilterType] = useState('missing');
 const [visibleCount, setVisibleCount] = useState(20);
 

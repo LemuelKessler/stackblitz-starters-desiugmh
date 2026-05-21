@@ -306,6 +306,18 @@ const missing = data.filter((i) =>
 );
 const totalLossValue = lossData.reduce(
   (acc, item) => acc + Number(item.value_brl || 0),
+ 0
+ );
+ 
+ const solid = lossData.filter((i) =>
+ i.type?.toLowerCase().includes('solid')
+ ).length;
+ 
+ const liquid = lossData.filter((i) =>
+ i.type?.toLowerCase().includes('liquid')
+ ).length;
+const totalLossValue = lossData.reduce(
+  (acc, item) => acc + Number(item.value_brl || 0),
   0
 );
 
@@ -532,27 +544,26 @@ const liquid = lossData.filter((i) =>
   <div className="max-w-6xl mx-auto">
 
     <h1 className="text-3xl mb-4">Loss Prevention</h1>
-
-    {/* BOTÕES */}
     <div className="flex gap-3 mb-4">
-      
-    <button
+<button
 onClick={() => window.open('https://docs.google.com/spreadsheets/d/1h43SveNtsmxtTOl_72DLoxHB51H4nM-5aIKv1VgKyEU/copy')}
 className="bg-gray-800 text-white px-4 py-2 rounded"
 >
  Baixar Template
 </button>
 
-      <input type="file" onChange={uploadLoss} />
+<input type="file" onChange={uploadLoss} />
+</div>
 
-    </div>
-
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 <Card title="Total Loss" value={lossData.length} />
 <Card title="Valor Total (R$)" value={`R$ ${totalLossValue}`} color="red" />
 <Card title="Solid" value={solid} />
 <Card title="Liquid" value={liquid} />
 </div>
+
+    {/* BOTÕES */}
+    
 <table className="w-full text-sm bg-white rounded overflow-hidden mt-4">
   <thead>
     <tr className="border-b">

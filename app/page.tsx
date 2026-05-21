@@ -568,7 +568,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 </div>
 
 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-<Card title="Total Loss" value={lossData.length} />
+<Card title="Total Loss" value={filteredLossData.length} />
 <Card title="Valor Total (R$)" value={`R$ ${totalLossValue}`} color="red" />
 <Card title="Solid" value={solid} />
 <Card title="Liquid" value={liquid} />

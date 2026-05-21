@@ -360,9 +360,9 @@ const pieData = [
     <main className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
       <aside className="w-64 bg-white border-r border-gray-200 p-6">
-  <h2 className="text-2xl font-bold mb-8 text-gray-800">
-    Logistics AI
-  </h2>
+      <h2 className="text-2xl font-bold mb-8 text-gray-800">
+  Inventory Control
+</h2>
 
   <button
     onClick={() => setActiveTab('dashboard')}

@@ -507,9 +507,9 @@ const pieData = [
       </li>
     )}
 
-    {high > moderate && (
+    {high > 10 && (
       <li className="text-orange-500">
-        🔥 Muitos itens em High Risk
+        🔥 Muitos itens em High Risk ({high})
       </li>
     )}
 
@@ -521,7 +521,7 @@ const pieData = [
 
     {onHold > 30 && (
       <li className="text-yellow-500">
-        ⏳ Muitos itens On Hold
+        ⏳ Muitos itens On Hold ({onHold})
       </li>
     )}
 

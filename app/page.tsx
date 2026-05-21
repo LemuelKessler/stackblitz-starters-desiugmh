@@ -304,6 +304,18 @@ const missing = data.filter((i) =>
   const filteredData = data.filter((item) =>
   item.count_type?.toLowerCase().trim().includes(filterType)
 );
+const totalLossValue = lossData.reduce(
+  (acc, item) => acc + Number(item.value_brl || 0),
+  0
+);
+
+const solid = lossData.filter((i) =>
+  i.type?.toLowerCase().includes('solid')
+).length;
+
+const liquid = lossData.filter((i) =>
+  i.type?.toLowerCase().includes('liquid')
+).length;
   return (
     <main className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}

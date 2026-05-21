@@ -330,11 +330,11 @@ const damagedCount = filteredLossData.filter((i) =>
   return true;
   });
   const lostCount = filteredLossData.filter((i) =>
-  i.type?.toLowerCase().includes('lost')
+  i.status?.toLowerCase().includes('lost')
 ).length;
 
 const damagedCount = filteredLossData.filter((i) =>
-  i.type?.toLowerCase().includes('damaged')
+  i.status?.toLowerCase().includes('damaged')
 ).length;
 
 const pieData = [

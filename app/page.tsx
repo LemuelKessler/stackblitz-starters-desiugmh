@@ -371,8 +371,8 @@ const missing = data.filter((i) =>
             <div className="bg-white shadow-sm border border-gray-200 p-6 rounded mb-6">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
+                <XAxis dataKey="name" tick={{ fill: '#6b7280' }} />
+<YAxis tick={{ fill: '#6b7280' }} />
                   <Tooltip
     contentStyle={{
       backgroundColor: '#fff',

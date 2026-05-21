@@ -393,7 +393,14 @@ const missing = data.filter((i) =>
     <BarChart data={countChartData}>
     <XAxis dataKey="name" tick={{ fill: '#6b7280' }} />
 <YAxis tick={{ fill: '#6b7280' }} />
-      <Tooltip />
+<Tooltip
+    contentStyle={{
+      backgroundColor: '#fff',
+      border: '1px solid #e5e7eb',
+      borderRadius: '8px',
+    }}
+    labelStyle={{ color: '#374151' }}
+  />
       <Bar dataKey="value" fill="#f97316" radius={[6, 6, 0, 0]} />
 
     </BarChart>

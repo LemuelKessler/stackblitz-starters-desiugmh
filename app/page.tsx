@@ -43,6 +43,7 @@ const [visibleCount, setVisibleCount] = useState(20);
   const [hubFilter, setHubFilter] = useState('');
   const [lossStartDate, setLossStartDate] = useState('');
 const [lossEndDate, setLossEndDate] = useState('');
+const [openLossImport, setOpenLossImport] = useState(false);
 
   // ==========================
   // FETCH INVENTORY

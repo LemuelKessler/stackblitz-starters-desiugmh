@@ -184,7 +184,7 @@ const [visibleCount, setVisibleCount] = useState(20);
           loss_date: row[getIndex('loss_date')] || '',
           responsibility: row[getIndex('responsibility')] || '',
           observation: row[getIndex('observation')] || '',
-          root_cause: getSafe(row, 'root_cause'),
+          root_cause: row[getIndex('root_cause')] || '',
           created_at: new Date().toISOString().split('T')[0],
           }));
         const valid = formatted.filter((i) => i.tracking);

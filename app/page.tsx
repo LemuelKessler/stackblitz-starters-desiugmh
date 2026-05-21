@@ -565,7 +565,12 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
  Baixar Template
 </button>
 
-<input type="file" onChange={uploadLoss} />
+<button
+  onClick={() => setOpenLossImport(true)}
+  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+>
+  Importar Loss
+</button>
 </div>
 
 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -615,11 +620,56 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       </div>
       {openImport && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          
           <div className="bg-white p-6 rounded-xl w-[420px] shadow-xl">
+            
 
 <h2 className="text-xl font-bold mb-4 text-gray-800">
   Importar Inventário
 </h2>
+{openLossImport && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-xl w-[420px] shadow-xl">
+
+      <h2 className="text-xl font-bold mb-4 text-gray-800">
+        Importar Loss
+      </h2>
+
+      {/* FILE */}
+      <div className="mb-4">
+        <label className="text-sm text-gray-600 block mb-1">
+          Arquivo CSV
+        </label>
+        <input
+          type="file"
+          onChange={(e) => {
+            uploadLoss(e);
+            setOpenLossImport(false);
+          }}
+          className="w-full text-sm"
+        />
+      </div>
+
+      {/* BOTÕES */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setOpenLossImport(false)}
+          className="flex-1 border border-gray-300 p-2 rounded text-gray-700 hover:bg-gray-100"
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={() => setOpenLossImport(false)}
+          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-semibold"
+        >
+          Fechar
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
 
 {/* DATA */}
 <div className="mb-3">

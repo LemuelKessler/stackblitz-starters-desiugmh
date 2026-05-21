@@ -498,16 +498,25 @@ const missing = data.filter((i) =>
 // CARD
 function Card({ title, value, color }: any) {
   const colors: any = {
-    green: 'text-green-400',
-    red: 'text-red-400',
-    yellow: 'text-yellow-400',
-    orange: 'text-orange-400',
+    green: 'text-green-500',
+    red: 'text-red-500',
+    yellow: 'text-yellow-500',
+    orange: 'text-orange-500',
   };
 
   return (
-    <div className="bg-gray-900 p-4 rounded">
-      <p className="text-white">{title}</p>
-      <h2 className="text-xl font-bold text-white">{value}</h2>
+    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+      
+      <p className="text-sm text-gray-500">
+        {title}
+      </p>
+
+      <h2 className={`text-2xl font-bold ${
+        color ? colors[color] : 'text-gray-900'
+      }`}>
+        {value}
+      </h2>
+
     </div>
   );
 }

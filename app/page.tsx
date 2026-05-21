@@ -245,19 +245,7 @@ fetchLoss();
   // ==========================
   // MÉTRICAS
   // ==========================
-  const lostCount = filteredLossData.filter((i) =>
-  i.type?.toLowerCase().includes('lost')
-).length;
-
-const damagedCount = filteredLossData.filter((i) =>
-  i.type?.toLowerCase().includes('damaged')
-).length;
-
-const pieData = [
-  { name: 'Lost', value: lostCount },
-  { name: 'Damaged', value: damagedCount },
-];
-
+  
 const COLORS = ['#ef4444', '#f97316']; // vermelho e laranja
   const total = data.length;
 
@@ -335,6 +323,19 @@ const missing = data.filter((i) =>
   
   return true;
   });
+  const lostCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('lost')
+).length;
+
+const damagedCount = filteredLossData.filter((i) =>
+  i.type?.toLowerCase().includes('damaged')
+).length;
+
+const pieData = [
+  { name: 'Lost', value: lostCount },
+  { name: 'Damaged', value: damagedCount },
+];
+
   const totalLossValue = filteredLossData.reduce(
     (acc, item) => acc + Number(item.value_brl || 0),
    0

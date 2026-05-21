@@ -323,6 +323,15 @@ const filteredLossData = lossData.filter((item) => {
 
   return true;
 });
+const lostCount = filteredLossData.filter((i) =>
+  i.status?.toLowerCase().includes('lost') ||
+  i.status?.toLowerCase().includes('extravio')
+).length;
+
+const damagedCount = filteredLossData.filter((i) =>
+  i.status?.toLowerCase().includes('damaged') ||
+  i.status?.toLowerCase().includes('avaria')
+).length;
   const lostCount = filteredLossData.filter((i) =>
   i.status?.toLowerCase().includes('lost')
 ).length;

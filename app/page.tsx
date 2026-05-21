@@ -602,7 +602,18 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 <Card title="Solid" value={solid} />
 <Card title="Liquid" value={liquid} />
 </div>
+<div className="bg-white p-6 rounded mb-6 border">
+  <h2 className="mb-4 font-semibold">Lost vs Damaged</h2>
 
+  <ResponsiveContainer width="100%" height={250}>
+    <BarChart data={pieData}>
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="value" fill="#ef4444" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
     {/* BOTÕES */}
     
 <table className="w-full text-sm bg-white rounded overflow-hidden mt-4">

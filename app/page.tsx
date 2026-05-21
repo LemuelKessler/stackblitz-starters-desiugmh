@@ -667,7 +667,52 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
         </BarChart>
       </ResponsiveContainer>
     </div>
+{/* ===== RANKING RESPONSÁVEIS ===== */}
+<div className="bg-white p-6 rounded mb-6 border">
+  <h2 className="mb-4 font-semibold">Ranking de Responsáveis</h2>
 
+  <table className="w-full text-sm">
+    <thead>
+      <tr className="border-b">
+        <th className="text-left py-2">Responsável</th>
+        <th className="text-left py-2">Qtd Loss</th>
+        <th className="text-left py-2">Valor Total (R$)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {Object.values(
+        filteredLossData.reduce((acc: any, item: any) => {
+          const resp = item.responsibility || 'Não definido';
+
+          if (!acc[resp]) {
+            acc[resp] = {
+              responsibility: resp,
+              count: 0,
+              value: 0,
+            };
+          }
+
+          acc[resp].count += 1;
+          acc[resp].value += Number(item.value_brl || 0);
+
+          return acc;
+        }, {})
+      )
+        .sort((a: any, b: any) => b.value - a.value) // ordena por valor
+        .slice(0, 10) // top 10
+        .map((item: any, i: number) => (
+          <tr key={i} className="border-b">
+            <td className="py-2">{item.responsibility}</td>
+            <td>{item.count}</td>
+            <td className="text-red-500 font-semibold">
+              R$ {item.value.toFixed(2)}
+            </td>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+</div>
     {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
     <div className="bg-white p-6 rounded border">
       <h2 className="mb-4 font-semibold">Insights</h2>

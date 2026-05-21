@@ -490,47 +490,78 @@ const missing = data.filter((i) =>
       </div>
       {openImport && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-zinc-900 p-6 rounded w-[400px]">
-            <h2 className="text-xl mb-4">Importar Inventário</h2>
+          <div className="bg-white p-6 rounded-xl w-[420px] shadow-xl">
 
-            <input
-              type="date"
-              value={inventoryDate}
-              onChange={(e) => setInventoryDate(e.target.value)}
-              className="w-full mb-3 bg-gray-800 p-2 rounded"
-            />
+<h2 className="text-xl font-bold mb-4 text-gray-800">
+  Importar Inventário
+</h2>
 
-            <select
-              value={hub}
-              onChange={(e) => setHub(e.target.value)}
-              className="w-full mb-3 bg-gray-800 p-2 rounded"
-            >
-              <option value="">Selecionar HUB</option>
-              <option value="LRJ-02">LRJ-02</option>
-              <option value="LRJ-08">LRJ-08</option>
-              <option value="LRJ-13">LRJ-13</option>
-              <option value="LRJ-15">LRJ-15</option>
-              <option value="LRJ-19">LRJ-19</option>
-              <option value="LRJ-23">LRJ-23</option>
-            </select>
+{/* DATA */}
+<div className="mb-3">
+  <label className="text-sm text-gray-600 block mb-1">
+    Data do Inventário
+  </label>
+  <input
+    type="date"
+    value={inventoryDate}
+    onChange={(e) => setInventoryDate(e.target.value)}
+    className="w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+  />
+</div>
 
-            <input
-              type="file"
-              onChange={(e) => {
-                handleFileUpload(e);
-                setOpenImport(false);
-              }}
-              className="w-full mb-4"
-            />
+{/* HUB */}
+<div className="mb-3">
+  <label className="text-sm text-gray-600 block mb-1">
+    Selecionar HUB
+  </label>
+  <select
+    value={hub}
+    onChange={(e) => setHub(e.target.value)}
+    className="w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+  >
+    <option value="">Escolher HUB</option>
+    <option value="LRJ-02">LRJ-02</option>
+    <option value="LRJ-08">LRJ-08</option>
+    <option value="LRJ-13">LRJ-13</option>
+    <option value="LRJ-15">LRJ-15</option>
+    <option value="LRJ-19">LRJ-19</option>
+    <option value="LRJ-23">LRJ-23</option>
+  </select>
+</div>
 
-            <button
-              onClick={() => setOpenImport(false)}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
-            >
-              Fechar
-            </button>
-          </div>
-        </div>
+{/* FILE */}
+<div className="mb-4">
+  <label className="text-sm text-gray-600 block mb-1">
+    Arquivo CSV
+  </label>
+  <input
+    type="file"
+    onChange={(e) => {
+      handleFileUpload(e);
+      setOpenImport(false);
+    }}
+    className="w-full text-sm"
+  />
+</div>
+
+{/* BOTÕES */}
+<div className="flex gap-2">
+  <button
+    onClick={() => setOpenImport(false)}
+    className="flex-1 border border-gray-300 p-2 rounded text-gray-700 hover:bg-gray-100"
+  >
+    Cancelar
+  </button>
+
+  <button
+    onClick={() => setOpenImport(false)}
+    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-semibold"
+  >
+    Importar
+  </button>
+</div>
+
+</div>
       )}
     </main>
   );

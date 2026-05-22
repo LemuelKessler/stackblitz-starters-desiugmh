@@ -1087,6 +1087,7 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
          <option>Erro de realocação</option>
          <option>Erro de sort</option>
          <option>Erro de etiquetagem</option>
+         <option>Bug sistemico</option>
          
        </select>
    

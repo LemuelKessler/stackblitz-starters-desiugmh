@@ -49,6 +49,8 @@ const [visibleCount, setVisibleCount] = useState(20);
   const [lossStartDate, setLossStartDate] = useState('');
 const [lossEndDate, setLossEndDate] = useState('');
 const [openLossImport, setOpenLossImport] = useState(false);
+const [lossHub, setLossHub] = useState('');
+
 
   // ==========================
   // FETCH INVENTORY
@@ -316,6 +318,9 @@ const liquidate = data.filter((i) =>
   item.count_type?.toLowerCase().trim().includes(filterType)
 );
 const filteredLossData = lossData.filter((item) => {
+
+  if (lossHub && item.hub !== lossHub) return false;
+
   if (!item.loss_date) return true;
 
   if (lossStartDate && lossEndDate) {
@@ -607,8 +612,21 @@ const pieData = [
         {activeTab === 'loss' && (
   <div className="max-w-6xl mx-auto">
 
-    <h1 className="text-3xl mb-4">Loss Prevention</h1>
-<div className="flex gap-2 mb-4">
+<div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-4">
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900">
+      Loss Prevention
+    </h1>
+    <p className="text-sm text-gray-500">
+      Monitoramento de perdas e avarias
+    </p>
+  </div>
+
+  <div className="bg-orange-500 text-white px-4 py-2 rounded-lg font-semibold">
+    {filteredLossData.length} registros
+  </div>
+</div>
+<div className="flex gap-4 flex-wrap items-center mb-4">
   <input
     type="date"
     value={lossStartDate}
@@ -621,6 +639,19 @@ const pieData = [
     onChange={(e) => setLossEndDate(e.target.value)}
     className="bg-gray-800 text-white p-2 rounded"
   />
+  <select
+  value={lossHub}
+  onChange={(e) => setLossHub(e.target.value)}
+  className="bg-gray-800 text-white p-2 rounded"
+>
+  <option value="">Todos os HUBs</option>
+  <option value="LRJ-02">LRJ-02</option>
+  <option value="LRJ-08">LRJ-08</option>
+  <option value="LRJ-13">LRJ-13</option>
+  <option value="LRJ-15">LRJ-15</option>
+  <option value="LRJ-19">LRJ-19</option>
+  <option value="LRJ-23">LRJ-23</option>
+</select>
 </div>
     <div className="flex gap-3 mb-4">
 <button
@@ -638,11 +669,13 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 </button>
 </div>
 
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
 <Card title="Total Loss" value={filteredLossData.length} />
 <Card title="Valor Total (R$)" value={`R$ ${totalLossValue}`} color="red" />
 <Card title="Solid" value={solid} />
 <Card title="Liquid" value={liquid} />
+<Card title="Lost" value={lostCount} color="red" />
+  <Card title="Damaged" value={damagedCount} color="yellow" />
 </div>
 <div className="bg-white p-3 md:p-6 rounded mb-6 border">
   <h2 className="mb-4 font-semibold">Lost vs Damaged</h2>

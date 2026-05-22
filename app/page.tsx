@@ -444,7 +444,23 @@ const pieData = [
     setProjectHub('');
     setOpenCreateProject(false);
   };
-
+  const paretoData = Object.values(
+    data.reduce((acc: any, item: any) => {
+      const cause = item.root_cause || 'Sem causa';
+  
+      if (!acc[cause]) {
+        acc[cause] = {
+          cause,
+          count: 0,
+        };
+      }
+  
+      acc[cause].count += 1;
+  
+      return acc;
+    }, {})
+  )
+  .sort((a: any, b: any) => b.count - a.count);
   return (
     <>
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
@@ -810,38 +826,50 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </div>
 )}
         {/* ANALYTICS */}
-{activeTab === 'analytics' && (
-<div className="max-w-7xl mx-auto">
+        {activeTab === 'analytics' && (
+  <div className="max-w-7xl mx-auto">
 
-<div className="flex justify-between items-center mb-4">
-  <h1 className="text-3xl">Analytics</h1>
+    <div className="flex justify-between items-center mb-4">
+      <h1 className="text-3xl">Analytics</h1>
 
-  <div className="flex gap-2">
-    <button
-      onClick={() => setOpenPasteModal(true)}
-      className="bg-purple-600 text-white px-4 py-2 rounded"
-    >
-      Colar BRs
-    </button>
+      <div className="flex gap-2">
+        <button
+          onClick={() => setOpenPasteModal(true)}
+          className="bg-purple-600 text-white px-4 py-2 rounded"
+        >
+          Colar BRs
+        </button>
 
-    <button
-      onClick={() => setOpenCreateProject(true)}
-      className="bg-orange-500 text-white px-4 py-2 rounded"
-    >
-      + Criar Projeto
-    </button>
-  </div>
-</div>
-
-  {/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <button
+          onClick={() => setOpenCreateProject(true)}
+          className="bg-orange-500 text-white px-4 py-2 rounded"
+        >
+          + Criar Projeto
+        </button>
+      </div>
+    </div>
+{/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <Card title="Accuracy" value={`${accuracy}%`} />
       <Card title="Total Loss (R$)" value={`R$ ${totalLossValue}`} color="red" />
       <Card title="Missing" value={missing} color="red" />
       <Card title="On Hold" value={onHold} color="orange" />
     </div>
 
-    
+    {/* 👇 E COLOCA O PARETO AQUI */}
+    <div className="bg-white p-6 rounded border">
+  <h2 className="mb-4 font-semibold">Pareto de Causas</h2>
+
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={paretoData}>
+      <XAxis dataKey="cause" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="count" fill="#7c3aed" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
     {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
     <div className="bg-white p-3 md:p-6 rounded border">
       <h2 className="mb-4 font-semibold">Insights</h2>

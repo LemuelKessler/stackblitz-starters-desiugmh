@@ -260,8 +260,8 @@ const uploadLoss = (event: any) => {
   // UPLOAD LOSS
   // ==========================
   const handlePasteBatch = async () => {
-    if (!pasteText || !batchCause) {
-      alert('Preencha os BRs e a causa ❌');
+    if (!pasteText || !batchCause || !selectedHub || !selectedDate) {
+      alert('Preencha HUB, DATA, BRs e causa ❌');
       return;
     }
   
@@ -275,12 +275,12 @@ const uploadLoss = (event: any) => {
       return;
     }
   
-      const { error } = await supabase
-  .from('inventory')
-  .update({ root_cause: batchCause })
-  .in('tracking', brList)
-  .eq('hub', selectedHub)
-  .eq('inventory_date', selectedDate);
+    const { error } = await supabase
+      .from('inventory')
+      .update({ root_cause: batchCause })
+      .in('tracking', brList)
+      .eq('hub', selectedHub)
+      .eq('inventory_date', selectedDate);
   
     if (error) {
       console.log(error);

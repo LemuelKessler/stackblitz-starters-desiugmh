@@ -1077,6 +1077,9 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
          <option>Misscan</option>
          <option>OnHold</option>
          <option>Volumoso não coube</option>
+         <option>Backlog de Volumoso</option>
+         <option>Erro de data</option>
+         <option>Cubagem de moto</option>
          <option>Fora de rota</option>
          <option>Avaria</option>
          <option>Repack</option>

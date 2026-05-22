@@ -16,7 +16,24 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+function Card({ title, value, color }: any) {
+  const colorMap: any = {
+    green: 'text-green-600',
+    red: 'text-red-600',
+    yellow: 'text-yellow-500',
+    orange: 'text-orange-500',
+    black: 'text-gray-900',
+  };
 
+  return (
+    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+      <p className="text-sm text-gray-500">{title}</p>
+      <h2 className={`text-xl font-bold ${colorMap[color] || 'text-gray-800'}`}>
+        {value}
+      </h2>
+    </div>
+  );
+}
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
@@ -120,7 +137,49 @@ const [batchCause, setBatchCause] = useState('');
   // UPLOAD INVENTORY
   // ==========================
     // ==========================
+    const handleFileUpload = (event: any) => {
+      const file = event.target.files[0];
+      if (!file) return;
     
+      Papa.parse(file, {
+        skipEmptyLines: true,
+        complete: async (res) => {
+          const rows = res.data;
+          const headers = rows[0];
+    
+          const getIndex = (name: string) =>
+            headers.findIndex((h: string) =>
+              h?.toLowerCase().includes(name)
+            );
+    
+          const formatted = rows.slice(1).map((row: any) => ({
+            tracking: row[getIndex('tracking')] || '',
+            hub: hub, // vem do select do modal
+            inventory_date: inventoryDate,
+            aging: row[getIndex('aging')] || '',
+            count_type: row[getIndex('count')] || '',
+            expected: row[getIndex('expected')] || '',
+            on_hold: Number(row[getIndex('on_hold')] || 0),
+            created_at: new Date().toISOString(),
+          }));
+    
+          const valid = formatted.filter((i) => i.tracking);
+    
+          const { error } = await supabase
+            .from('inventory')
+            .insert(valid);
+    
+          if (error) {
+            console.log(error);
+            alert('Erro ao subir inventário ❌');
+            return;
+          }
+    
+          alert('Inventário enviado 🚀');
+          fetchData();
+        },
+      });
+    };
 // UPLOAD LOSS
 // ==========================
 const uploadLoss = (event: any) => {
@@ -1052,51 +1111,51 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
     
       {/* ===== MODAL COLAR BRs (FIXADO) ===== */}
       {openPasteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
-          <div className="bg-white p-6 rounded-xl w-[400px]">
-    
-            <h2 className="text-xl font-bold mb-4">
-              Classificação em lote (colar BRs)
-            </h2>
-    
-            <textarea
-              placeholder="Cole os BRs aqui"
-              value={pasteText}
-              onChange={(e) => setPasteText(e.target.value)}
-              className="w-full h-32 border p-2 rounded mb-3"
-            />
-    
-            <select
-              value={batchCause}
-              onChange={(e) => setBatchCause(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
-            >
-              <option value="">Selecionar causa</option>
-              <option>Processo</option>
-              <option>Pessoas</option>
-              <option>Sistema</option>
-              <option>Layout</option>
-              <option>Transporte</option>
-            </select>
-    
-            <div className="flex gap-2">
-              <button
-                onClick={() => setOpenPasteModal(false)}
-                className="flex-1 border p-2 rounded"
-              >
-                Cancelar
-              </button>
-    
-              <button
-                onClick={handlePasteBatch}
-                className="flex-1 bg-purple-600 text-white p-2 rounded"
-              >
-                Aplicar
-              </button>
-            </div>
-    
-          </div>
-        </div>
+     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
+     <div className="bg-white p-6 rounded-xl w-[400px] shadow-xl text-gray-800">
+   
+       <h2 className="text-xl font-bold mb-4">
+         Classificação em lote (colar BRs)
+       </h2>
+   
+       <textarea
+         placeholder="Cole os BRs aqui"
+         value={pasteText}
+         onChange={(e) => setPasteText(e.target.value)}
+         className="w-full h-32 border border-gray-300 p-2 rounded mb-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+       />
+   
+       <select
+         value={batchCause}
+         onChange={(e) => setBatchCause(e.target.value)}
+         className="w-full mb-4 p-2 border border-gray-300 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
+       >
+         <option value="">Selecionar causa</option>
+         <option>Processo</option>
+         <option>Pessoas</option>
+         <option>Sistema</option>
+         <option>Layout</option>
+         <option>Transporte</option>
+       </select>
+   
+       <div className="flex gap-2">
+         <button
+           onClick={() => setOpenPasteModal(false)}
+           className="flex-1 border border-gray-300 p-2 rounded text-gray-700 hover:bg-gray-100"
+         >
+           Cancelar
+         </button>
+   
+         <button
+           onClick={handlePasteBatch}
+           className="flex-1 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded"
+         >
+           Aplicar
+         </button>
+       </div>
+   
+     </div>
+   </div>
       )}
       
     
@@ -1120,7 +1179,8 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
             <select
               value={projectHub}
               onChange={(e) => setProjectHub(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
+              className="w-full mb-4 p-2 border rounded bg-white text-black"
+
             >
               <option value="">Selecionar HUB</option>
               <option value="LRJ-02">LRJ-02</option>

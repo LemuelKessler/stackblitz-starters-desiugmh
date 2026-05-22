@@ -55,7 +55,8 @@ export default function Home() {
 
   const [filterType, setFilterType] = useState('missing');
 const [visibleCount, setVisibleCount] = useState(20);
-
+const [selectedHub, setSelectedHub] = useState('');
+const [selectedDate, setSelectedDate] = useState('');
   // filtros
   const [inventoryDate, setInventoryDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -274,10 +275,12 @@ const uploadLoss = (event: any) => {
       return;
     }
   
-    const { error } = await supabase
-      .from('inventory')
-      .update({ root_cause: batchCause })
-      .in('tracking', brList);
+      const { error } = await supabase
+  .from('inventory')
+  .update({ root_cause: batchCause })
+  .in('tracking', brList)
+  .eq('hub', selectedHub)
+  .eq('inventory_date', selectedDate);
   
     if (error) {
       console.log(error);
@@ -1117,7 +1120,26 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
        <h2 className="text-xl font-bold mb-4">
          Classificação em lote (colar BRs)
        </h2>
-   
+       <select
+  value={selectedHub}
+  onChange={(e) => setSelectedHub(e.target.value)}
+  className="w-full mb-3 p-2 border rounded text-black"
+>
+  <option value="">Selecionar HUB</option>
+  <option value="LRJ-02">LRJ-02</option>
+  <option value="LRJ-08">LRJ-08</option>
+  <option value="LRJ-13">LRJ-13</option>
+  <option value="LRJ-15">LRJ-15</option>
+  <option value="LRJ-19">LRJ-19</option>
+  <option value="LRJ-23">LRJ-23</option>
+</select>
+
+<input
+  type="date"
+  value={selectedDate}
+  onChange={(e) => setSelectedDate(e.target.value)}
+  className="w-full mb-3 p-2 border rounded text-black"
+/>
        <textarea
          placeholder="Cole os BRs aqui"
          value={pasteText}
@@ -1131,11 +1153,16 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
          className="w-full mb-4 p-2 border border-gray-300 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
        >
          <option value="">Selecionar causa</option>
-         <option>Processo</option>
-         <option>Pessoas</option>
-         <option>Sistema</option>
-         <option>Layout</option>
-         <option>Transporte</option>
+         <option>LH</option>
+         <option>Comercial</option>
+         <option>Misscan</option>
+         <option>OnHold</option>
+         <option>Volumoso não coube</option>
+         <option>Fora de rota</option>
+         <option>Avaria</option>
+         <option>Repack</option>
+         <option>Baixo ADO</option>
+         
        </select>
    
        <div className="flex gap-2">

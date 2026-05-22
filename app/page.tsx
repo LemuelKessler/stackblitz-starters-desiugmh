@@ -753,18 +753,21 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </div>
 )}
         {/* ANALYTICS */}
-        <button
-  onClick={() => setOpenCreateProject(true)}
-  className="bg-orange-500 text-white px-4 py-2 rounded mb-4"
->
-  + Criar Projeto
-</button>
-        {activeTab === 'analytics' && (
-  <div className="max-w-7xl mx-auto">
+{activeTab === 'analytics' && (
+<div className="max-w-7xl mx-auto">
 
-    <h1 className="text-3xl mb-6">Analytics</h1>
+  <div className="flex justify-between items-center mb-4">
+    <h1 className="text-3xl">Analytics</h1>
 
-    {/* ===== KPIs GERAIS ===== */}
+    <button
+      onClick={() => setOpenCreateProject(true)}
+      className="bg-orange-500 text-white px-4 py-2 rounded"
+    >
+      + Criar Projeto
+    </button>
+  </div>
+
+  {/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <Card title="Accuracy" value={`${accuracy}%`} />
       <Card title="Total Loss (R$)" value={`R$ ${totalLossValue}`} color="red" />

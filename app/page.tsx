@@ -52,6 +52,11 @@ const [openLossImport, setOpenLossImport] = useState(false);
 const [lossHub, setLossHub] = useState('');
 
 
+// ===== ASP PROJECT =====
+const [openCreateProject, setOpenCreateProject] = useState(false);
+const [projectName, setProjectName] = useState('');
+const [projectHub, setProjectHub] = useState('');
+
   // ==========================
   // FETCH INVENTORY
   // ==========================
@@ -356,7 +361,35 @@ const pieData = [
    const liquid = filteredLossData.filter((i) =>
    i.type?.toLowerCase().includes('liquid')
    ).length;
+
+   const createProject = async () => {
+    if (!projectName || !projectHub) {
+      alert('Preenche tudo ❌');
+      return;
+    }
+  
+    const { error } = await supabase.from('asp_projects').insert([
+      {
+        title: projectName,
+        hub: projectHub,
+        status: 'aberto',
+      },
+    ]);
+  
+    if (error) {
+      alert('Erro ao criar ❌');
+      return;
+    }
+  
+    alert('Projeto criado 🚀');
+  
+    setProjectName('');
+    setProjectHub('');
+    setOpenCreateProject(false);
+  };
+
   return (
+    <>
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
       <aside className="hidden md:block md:w-64 bg-white border-r border-gray-200 p-3 md:p-6">
@@ -720,6 +753,12 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
   </div>
 )}
         {/* ANALYTICS */}
+        <button
+  onClick={() => setOpenCreateProject(true)}
+  className="bg-orange-500 text-white px-4 py-2 rounded mb-4"
+>
+  + Criar Projeto
+</button>
         {activeTab === 'analytics' && (
   <div className="max-w-7xl mx-auto">
 
@@ -978,10 +1017,10 @@ onChange={(e) => {
 uploadLoss(e);
 setOpenLossImport(false);
 }}
+
 className="w-full text-sm"
 />
 </div>
-
 <div className="flex gap-2">
 <button
 onClick={() => setOpenLossImport(false)}
@@ -1001,10 +1040,60 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
 </div>
 </div>
 )}
-</main>
-);
-}
 
+</main>
+
+{openCreateProject && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-xl w-[400px]">
+
+      <h2 className="text-xl font-bold mb-4">
+        Criar Projeto ASP
+      </h2>
+
+      <input
+        type="text"
+        placeholder="Nome do projeto"
+        value={projectName}
+        onChange={(e) => setProjectName(e.target.value)}
+        className="w-full mb-3 p-2 border rounded"
+      />
+
+      <select
+        value={projectHub}
+        onChange={(e) => setProjectHub(e.target.value)}
+        className="w-full mb-4 p-2 border rounded"
+      >
+        <option value="">Selecionar HUB</option>
+        <option value="LRJ-02">LRJ-02</option>
+        <option value="LRJ-08">LRJ-08</option>
+        <option value="LRJ-13">LRJ-13</option>
+        <option value="LRJ-15">LRJ-15</option>
+        <option value="LRJ-19">LRJ-19</option>
+        <option value="LRJ-23">LRJ-23</option>
+      </select>
+
+      <div className="flex gap-2">
+        <button
+          onClick={() => setOpenCreateProject(false)}
+          className="flex-1 border p-2 rounded"
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={createProject}
+          className="flex-1 bg-orange-500 text-white p-2 rounded"
+        >
+          Criar
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+</>
+);
 // CARD
 function Card({ title, value, color }: any) {
   const colors: any = {
@@ -1029,3 +1118,4 @@ function Card({ title, value, color }: any) {
     </div>
     );
     }
+  }

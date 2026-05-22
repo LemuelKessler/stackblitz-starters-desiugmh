@@ -1153,7 +1153,8 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
          className="w-full mb-4 p-2 border border-gray-300 rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-500"
        >
          <option value="">Selecionar causa</option>
-         <option>LH</option>
+         <option>LH Atrasado</option>
+         <option>Corte por desvio de forecast</option>
          <option>Comercial</option>
          <option>Misscan</option>
          <option>OnHold</option>

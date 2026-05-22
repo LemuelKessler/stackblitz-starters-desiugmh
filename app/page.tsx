@@ -56,6 +56,9 @@ const [lossHub, setLossHub] = useState('');
 const [openCreateProject, setOpenCreateProject] = useState(false);
 const [projectName, setProjectName] = useState('');
 const [projectHub, setProjectHub] = useState('');
+const [openPasteModal, setOpenPasteModal] = useState(false);
+const [pasteText, setPasteText] = useState('');
+const [batchCause, setBatchCause] = useState('');
 
   // ==========================
   // FETCH INVENTORY
@@ -116,98 +119,53 @@ const [projectHub, setProjectHub] = useState('');
   // ==========================
   // UPLOAD INVENTORY
   // ==========================
-  const handleFileUpload = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    // ==========================
+    
+// UPLOAD LOSS
+// ==========================
+const uploadLoss = (event: any) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-    Papa.parse(file, {
-      skipEmptyLines: true,
-      complete: async (results) => {
-        const rows: any[] = results.data;
-        const headers = rows[0];
+  Papa.parse(file, {
+    skipEmptyLines: true,
+    complete: async (res) => {
+      const rows = res.data;
+      const headers = rows[0];
 
-        const getIndex = (name: string) =>
-          headers.findIndex((h: string) => h?.toLowerCase().includes(name));
+      const getIndex = (name: string) =>
+        headers.findIndex((h: string) =>
+          h?.toLowerCase().includes(name)
+        );
 
-        const idxTracking = getIndex('tracking');
-        const idxSort = getIndex('sort');
-        const idxExpected = getIndex('expected');
-        const idxAging = getIndex('aging');
-        const idxHold = getIndex('hold');
-        const idxCountType = getIndex('count type');
+      const idxTracking = getIndex('tracking');
 
-        const finalDate =
-          inventoryDate || new Date().toISOString().split('T')[0];
+      if (idxTracking === -1) {
+        alert('CSV inválido ❌');
+        return;
+      }
 
-        if (!hub) {
-          alert('Selecione o HUB antes de importar ❌');
-          return;
-        }
-        const formatted = rows.slice(1).map((row: any) => ({
-          tracking: row[idxTracking] || '',
-          sort: row[idxSort] || '',
-          expected: row[idxExpected] || '',
-          aging: row[idxAging] || '',
-          on_hold: row[idxHold] || '0',
-          count_type: row[idxCountType] || '',
-          inventory_date: finalDate,
-          hub: hub,
-          }));
-          
-        const valid = formatted.filter((i) => i.tracking);
+      const formatted = rows.slice(1).map((row: any) => {
+        const rawDate = row[getIndex('loss_date')];
 
-        await supabase.from('inventory').insert(valid);
+        let formattedDate = null;
 
-        alert('Upload Inventory 🚀');
-        fetchData();
-      },
-    });
-  };
-
-  // ==========================
-  // UPLOAD LOSS
-  // ==========================
-  const uploadLoss = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    Papa.parse(file, {
-      skipEmptyLines: true,
-      complete: async (res) => {
-        const rows = res.data;
-        const headers = rows[0];
-
-        const getIndex = (name: string) =>
-          headers.findIndex((h: string) => h?.toLowerCase().includes(name));
-
-        const idxTracking = getIndex('tracking');
-
-        if (idxTracking === -1) {
-          alert('CSV inválido ❌');
-          return;
-        }
-
-        const formatted = rows.slice(1).map((row: any) => {
-          const rawDate = row[getIndex('loss_date')];
-          
-          let formattedDate = null;
-          
-          if (rawDate) {
+        if (rawDate) {
           if (rawDate.includes('/')) {
-          const [day, month, year] = rawDate.split('/');
-          formattedDate = `${year}-${month}-${day}`;
+            const [day, month, year] = rawDate.split('/');
+            formattedDate = `${year}-${month}-${day}`;
           } else {
-          formattedDate = rawDate;
+            formattedDate = rawDate;
           }
-          }
-          
-          return {
+        }
+
+        return {
           tracking: row[getIndex('tracking')] || '',
           type: row[getIndex('type')] || '',
           value_brl: parseFloat(
-          (row[getIndex('value_brl')] || '0')
-          .replace(/\./g, '')
-          .replace(',', '.')
+            (row[getIndex('value_brl')] || '0')
+              .replace(/\./g, '')
+              .replace(',', '.')
           ),
           hub: row[getIndex('hub')] || '',
           status: row[getIndex('status')] || '',
@@ -217,28 +175,65 @@ const [projectHub, setProjectHub] = useState('');
           observation: row[getIndex('observation')] || '',
           root_cause: row[getIndex('root_cause')] || '',
           created_at: new Date().toISOString().split('T')[0],
-          };
-          });
-        const valid = formatted.filter((i) => i.tracking);
+        };
+      });
 
-        const { data, error } = await supabase
-  .from('loss_prevention')
-  .insert(valid);
+      const valid = formatted.filter((i) => i.tracking);
 
-console.log('DADOS:', valid);
-console.log('ERRO:', error);
+      const { error } = await supabase
+        .from('loss_prevention')
+        .insert(valid);
 
-if (error) {
-  alert('Erro ao subir ❌');
-  return;
-}
+      if (error) {
+        alert('Erro ao subir ❌');
+        return;
+      }
 
-alert('Upload Loss 🚀');
-fetchLoss();
-      },
-    });
+      alert('Upload Loss 🚀');
+      fetchLoss();
+    },
+  });
+};
+
+
+  // ==========================
+  // UPLOAD LOSS
+  // ==========================
+  const handlePasteBatch = async () => {
+    if (!pasteText || !batchCause) {
+      alert('Preencha os BRs e a causa ❌');
+      return;
+    }
+  
+    const brList = pasteText
+      .split('\n')
+      .map((i) => i.trim())
+      .filter((i) => i);
+  
+    if (brList.length === 0) {
+      alert('Nenhum BR válido ❌');
+      return;
+    }
+  
+    const { error } = await supabase
+      .from('inventory')
+      .update({ root_cause: batchCause })
+      .in('tracking', brList);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao atualizar ❌');
+      return;
+    }
+  
+    alert(`Atualizado ${brList.length} BRs 🚀`);
+  
+    setOpenPasteModal(false);
+    setPasteText('');
+    setBatchCause('');
+  
+    fetchData();
   };
-
   // ==========================
   // AGING
   // ==========================
@@ -445,7 +440,7 @@ const pieData = [
     📈 Analytic
   </button>
 </div>
-      <div className="flex-1 p-3 md:p-6 overflow-auto">
+<div className="flex-1 p-3 md:p-6">
         {/* DASHBOARD */}
         {activeTab === 'dashboard' && (
           <div className="max-w-7xl mx-auto">
@@ -756,8 +751,16 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 {activeTab === 'analytics' && (
 <div className="max-w-7xl mx-auto">
 
-  <div className="flex justify-between items-center mb-4">
-    <h1 className="text-3xl">Analytics</h1>
+<div className="flex justify-between items-center mb-4">
+  <h1 className="text-3xl">Analytics</h1>
+
+  <div className="flex gap-2">
+    <button
+      onClick={() => setOpenPasteModal(true)}
+      className="bg-purple-600 text-white px-4 py-2 rounded"
+    >
+      Colar BRs
+    </button>
 
     <button
       onClick={() => setOpenCreateProject(true)}
@@ -766,6 +769,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       + Criar Projeto
     </button>
   </div>
+</div>
 
   {/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -1045,80 +1049,105 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
 )}
 
 </main>
-
-{openCreateProject && (
-  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-xl w-[400px]">
-
-      <h2 className="text-xl font-bold mb-4">
-        Criar Projeto ASP
-      </h2>
-
-      <input
-        type="text"
-        placeholder="Nome do projeto"
-        value={projectName}
-        onChange={(e) => setProjectName(e.target.value)}
-        className="w-full mb-3 p-2 border rounded"
-      />
-
-      <select
-        value={projectHub}
-        onChange={(e) => setProjectHub(e.target.value)}
-        className="w-full mb-4 p-2 border rounded"
-      >
-        <option value="">Selecionar HUB</option>
-        <option value="LRJ-02">LRJ-02</option>
-        <option value="LRJ-08">LRJ-08</option>
-        <option value="LRJ-13">LRJ-13</option>
-        <option value="LRJ-15">LRJ-15</option>
-        <option value="LRJ-19">LRJ-19</option>
-        <option value="LRJ-23">LRJ-23</option>
-      </select>
-
-      <div className="flex gap-2">
-        <button
-          onClick={() => setOpenCreateProject(false)}
-          className="flex-1 border p-2 rounded"
-        >
-          Cancelar
-        </button>
-
-        <button
-          onClick={createProject}
-          className="flex-1 bg-orange-500 text-white p-2 rounded"
-        >
-          Criar
-        </button>
-      </div>
-
-    </div>
-  </div>
-)}
-</>
-);
-// CARD
-function Card({ title, value, color }: any) {
-  const colors: any = {
-    green: 'text-green-500',
-    red: 'text-red-500',
-    yellow: 'text-yellow-500',
-    orange: 'text-orange-500',
-  };
-
-  return (
-    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
-    <p className="text-sm text-gray-500">
-    {title}
-    </p>
     
-    <h2 className={`text-2xl font-bold ${
-    color ? colors[color] : 'text-gray-900'
-    }`}>
-    {value}
-    </h2>
+      {/* ===== MODAL COLAR BRs (FIXADO) ===== */}
+      {openPasteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
+          <div className="bg-white p-6 rounded-xl w-[400px]">
     
-    </div>
-    );
-    }
-  }
+            <h2 className="text-xl font-bold mb-4">
+              Classificação em lote (colar BRs)
+            </h2>
+    
+            <textarea
+              placeholder="Cole os BRs aqui"
+              value={pasteText}
+              onChange={(e) => setPasteText(e.target.value)}
+              className="w-full h-32 border p-2 rounded mb-3"
+            />
+    
+            <select
+              value={batchCause}
+              onChange={(e) => setBatchCause(e.target.value)}
+              className="w-full mb-4 p-2 border rounded"
+            >
+              <option value="">Selecionar causa</option>
+              <option>Processo</option>
+              <option>Pessoas</option>
+              <option>Sistema</option>
+              <option>Layout</option>
+              <option>Transporte</option>
+            </select>
+    
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOpenPasteModal(false)}
+                className="flex-1 border p-2 rounded"
+              >
+                Cancelar
+              </button>
+    
+              <button
+                onClick={handlePasteBatch}
+                className="flex-1 bg-purple-600 text-white p-2 rounded"
+              >
+                Aplicar
+              </button>
+            </div>
+    
+          </div>
+        </div>
+      )}
+      
+    
+      {/* ===== MODAL CREATE PROJECT ===== */}
+      {openCreateProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
+          <div className="bg-white p-6 rounded-xl w-[400px]">
+    
+            <h2 className="text-xl font-bold mb-4">
+              Criar Projeto ASP
+            </h2>
+    
+            <input
+              type="text"
+              placeholder="Nome do projeto"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              className="w-full mb-3 p-2 border rounded"
+            />
+    
+            <select
+              value={projectHub}
+              onChange={(e) => setProjectHub(e.target.value)}
+              className="w-full mb-4 p-2 border rounded"
+            >
+              <option value="">Selecionar HUB</option>
+              <option value="LRJ-02">LRJ-02</option>
+              <option value="LRJ-08">LRJ-08</option>
+              <option value="LRJ-13">LRJ-13</option>
+              <option value="LRJ-15">LRJ-15</option>
+              <option value="LRJ-19">LRJ-19</option>
+              <option value="LRJ-23">LRJ-23</option>
+            </select>
+    
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOpenCreateProject(false)}
+                className="flex-1 border p-2 rounded"
+              >
+                Cancelar
+              </button>
+    
+              <button
+                onClick={createProject}
+                className="flex-1 bg-orange-500 text-white p-2 rounded"
+              >
+                Criar
+              </button>
+            </div>
+    
+          </div>
+        </div>
+      )}
+      </>)}

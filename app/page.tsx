@@ -82,6 +82,38 @@ export default function Home() {
   const [openPasteModal, setOpenPasteModal] = useState(false);
   const [pasteText, setPasteText] = useState('');
   const [batchCause, setBatchCause] = useState('');
+  const deleteProject = async (projectId: string) => {
+    const confirmDelete = confirm('Tem certeza que deseja apagar o projeto?');
+    if (!confirmDelete) return;
+  
+    // 🔥 apagar dependências primeiro
+    await supabase
+      .from('ishikawa_items')
+      .delete()
+      .eq('project_id', projectId);
+  
+    await supabase
+      .from('actions_5w2h')
+      .delete()
+      .eq('project_id', projectId);
+  
+    // 🔥 apagar projeto
+    const { error } = await supabase
+      .from('asp_projects')
+      .delete()
+      .eq('id', projectId);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao deletar ❌');
+      return;
+    }
+  
+    alert('Projeto apagado 🚀');
+  
+    // 🔥 atualiza lista na tela
+    fetchProjects();
+  };
 
   // ==========================
   // FETCH INVENTORY
@@ -485,6 +517,8 @@ export default function Home() {
     setOpenCreateProject(false);
     fetchProjects();
   };
+
+  
   const paretoInsights = () => {
     if (!filteredAnalyticsData.length) return null;
 
@@ -522,6 +556,7 @@ export default function Home() {
       criticalList: critical,
     };
   };
+  
   // ==========================
   // FILTRO ANALYTICS (PASSO 2)
   // ==========================

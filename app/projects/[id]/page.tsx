@@ -187,7 +187,44 @@ const saveWhys = async (itemId: string) => {
   
     fetchIshikawa();
   };
+  // ===== 5W2H =====
+const saveAction = async () => {
+    if (!form5w2h.what || !form5w2h.who) {
+      alert('Preencha pelo menos WHAT e WHO ❌');
+      return;
+    }
   
+    const { error } = await supabase
+      .from('actions_5w2h')
+      .insert([
+        {
+          project_id: id,
+          ...form5w2h,
+          status: 'pendente',
+          created_at: new Date().toISOString(),
+        },
+      ]);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao salvar ação ❌');
+      return;
+    }
+  
+    alert('Ação criada 🚀');
+  
+    setForm5w2h({
+      what: '',
+      why: '',
+      where: '',
+      when: '',
+      who: '',
+      how: '',
+      how_much: '',
+    });
+  
+    fetchActions();
+  };
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase
@@ -355,8 +392,52 @@ const saveWhys = async (itemId: string) => {
 ))}
       </div>
     ))}
+</div>
+</div>
+
+{/* ===== 5W2H ===== */}
+<div className="bg-white p-6 rounded border">
+  <h2 className="font-semibold mb-4">📋 Plano de Ação (5W2H)</h2>
+
+  <input
+    placeholder="What (o que será feito)"
+    value={form5w2h.what}
+    onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
+    className="border p-2 rounded w-full mb-2"
+  />
+
+  <input
+    placeholder="Who (responsável)"
+    value={form5w2h.who}
+    onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
+    className="border p-2 rounded w-full mb-2"
+  />
+
+  <button
+    onClick={saveAction}
+    className="bg-green-600 text-white px-4 py-2 rounded"
+  >
+    + Criar ação
+  </button>
+
+  <div className="mt-4">
+  {actions.map((a) => (
+  <div key={a.id} className="border p-3 rounded mb-2 text-sm space-y-1">
+    
+    <p><strong>O que:</strong> {a.what}</p>
+    <p><strong>Quem:</strong> {a.who}</p>
+
+    {a.why && <p><strong>Por quê:</strong> {a.why}</p>}
+    {a.where && <p><strong>Onde:</strong> {a.where}</p>}
+    {a.when && <p><strong>Quando:</strong> {a.when}</p>}
+    {a.how && <p><strong>Como:</strong> {a.how}</p>}
+    {a.how_much && <p><strong>Custo:</strong> {a.how_much}</p>}
+
+  </div>
+))}
   </div>
 </div>
-    </div>
+</div>
+
   );
 }

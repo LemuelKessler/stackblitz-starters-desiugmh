@@ -995,39 +995,7 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
     </div>
   </div>
 )}
-    {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
-    <div className="bg-white p-3 md:p-6 rounded border">
-      <h2 className="mb-4 font-semibold">Insights</h2>
-
-      <ul className="list-disc pl-6 space-y-2">
-
-        <li>
-          HUB com maior loss:{' '}
-          {
-            Object.entries(
-              filteredLossData.reduce((acc: any, item: any) => {
-                acc[item.hub] = (acc[item.hub] || 0) + Number(item.value_brl || 0);
-                return acc;
-              }, {})
-            ).sort((a: any, b: any) => b[1] - a[1])[0]?.[0]
-          }
-        </li>
-
-        <li>
-          Total de perdas: R$ {totalLossValue}
-        </li>
-
-        <li>
-          Itens Missing: {missing}
-        </li>
-
-        <li>
-          Itens On Hold: {onHold}
-        </li>
-
-      </ul>
-    </div>
-
+    
   </div>
 )}
       </div>

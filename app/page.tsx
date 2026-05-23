@@ -61,6 +61,7 @@ const [selectedDate, setSelectedDate] = useState('');
 const [analyticsHub, setAnalyticsHub] = useState('');
 const [analyticsStartDate, setAnalyticsStartDate] = useState('');
 const [analyticsEndDate, setAnalyticsEndDate] = useState('');
+const [projects, setProjects] = useState<any[]>([]);
   // filtros
   const [inventoryDate, setInventoryDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -120,7 +121,19 @@ const [batchCause, setBatchCause] = useState('');
 
     setData(allData);
   };
+// ==========================
+// FETCH PROJECTS
+// ==========================
+const fetchProjects = async () => {
+  const { data, error } = await supabase
+    .from('asp_projects')
+    .select('*')
+    .order('created_at', { ascending: false });
 
+  if (!error) {
+    setProjects(data || []);
+  }
+};
   // ==========================
   // FETCH LOSS
   // ==========================
@@ -136,6 +149,7 @@ const [batchCause, setBatchCause] = useState('');
   useEffect(() => {
     fetchData();
     fetchLoss();
+    fetchProjects(); // 👈 ADICIONA AQUI
   }, [inventoryDate, startDate, endDate, hubFilter]);
 
   // ==========================
@@ -179,7 +193,7 @@ const [batchCause, setBatchCause] = useState('');
             alert('Erro ao subir inventário ❌');
             return;
           }
-    
+          await fetchProjects(); // 👈 AQUI
           alert('Inventário enviado 🚀');
           fetchData();
         },
@@ -429,12 +443,10 @@ const pieData = [
       return;
     }
   
-    // pega dados filtrados do dashboard
     const relatedItems = data.filter(
       (item) => item.hub === projectHub
     );
   
-    // calcula impacto
     const totalItems = relatedItems.length;
   
     const causes = relatedItems.reduce((acc: any, item: any) => {
@@ -443,18 +455,16 @@ const pieData = [
       return acc;
     }, {});
   
-    // pega principal causa
-    const mainCause = Object.entries(causes).sort(
-      (a: any, b: any) => b[1] - a[1]
-    )[0]?.[0];
+    const mainCause =
+      Object.entries(causes).sort(
+        (a: any, b: any) => b[1] - a[1]
+      )[0]?.[0] || 'Sem causa';
   
     const { error } = await supabase.from('asp_projects').insert([
       {
         title: projectName,
         hub: projectHub,
         status: 'aberto',
-        cause: mainCause, // 👈 NOVO
-        volume: totalItems, // 👈 NOVO
         created_at: new Date().toISOString(),
       },
     ]);
@@ -465,34 +475,10 @@ const pieData = [
       return;
     }
   
-    alert(`Projeto criado 🚀 (Causa: ${mainCause})`);
-    
+    alert(`Projeto criado 🚀`);
     setProjectName('');
     setProjectHub('');
     setOpenCreateProject(false);
-document.body.style.overflow = 'auto';
-  };  const createASPFromCause = async (cause: string) => {
-    if (!cause) {
-      alert('Causa inválida ❌');
-      return;
-    }
-  
-    const { error } = await supabase.from('asp_projects').insert([
-      {
-        title: `ASP - ${mainCause} (${projectHub})`,
-        hub: hubFilter || 'Geral',
-        cause: cause,
-        status: 'aberto',
-      },
-    ]);
-  
-    if (error) {
-      console.log(error);
-      alert('Erro ao criar ASP ❌');
-      return;
-    }
-  
-    alert(`ASP criada para: ${cause} 🚀`);
   };
   
   const paretoInsights = () => {
@@ -1041,6 +1027,24 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
       </p>
 
     </div>
+    <div className="bg-white p-6 rounded border mt-6">
+  <h2 className="font-bold mb-4">📂 Projetos ASP</h2>
+
+  {projects.length === 0 && (
+    <p className="text-gray-500">Nenhum projeto ainda</p>
+  )}
+
+{projects.map((p, i) => (
+  <div
+    key={i}
+    onClick={() => router.push(`/projects/${p.id}`)}
+    className="cursor-pointer p-3 border rounded mb-2 hover:bg-gray-100"
+  >
+    <p className="font-semibold">{p.title}</p>
+    <p className="text-sm text-gray-500">{p.hub}</p>
+  </div>
+))}
+</div>
   </div>
 )}
     
@@ -1263,12 +1267,12 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
             </h2>
     
             <input
-              type="text"
-              placeholder="Nome do projeto"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              className="w-full mb-3 p-2 border rounded"
-            />
+  type="text"
+  placeholder="Nome do projeto"
+  value={projectName}
+  onChange={(e) => setProjectName(e.target.value)}
+  className="w-full mb-3 p-2 border rounded bg-white text-black"
+/>
     
             <select
               value={projectHub}
@@ -1286,12 +1290,12 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
             </select>
     
             <div className="flex gap-2">
-              <button
-                onClick={() => setOpenCreateProject(false)}
-                className="flex-1 border p-2 rounded"
-              >
-                Cancelar
-              </button>
+            <button
+  onClick={() => setOpenCreateProject(false)}
+  className="flex-1 border p-2 rounded text-gray-700 bg-gray-100 hover:bg-gray-200"
+>
+  Cancelar
+</button>
     
               <button
                 onClick={createProject}

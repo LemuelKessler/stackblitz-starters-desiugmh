@@ -450,7 +450,7 @@ const pieData = [
     const totalItems = relatedItems.length;
   
     const causes = relatedItems.reduce((acc: any, item: any) => {
-      const cause = item.root_cause || 'Sem causa';
+      const cause = item.root_cause?.trim() || 'Sem causa';
       acc[cause] = (acc[cause] || 0) + 1;
       return acc;
     }, {});
@@ -480,7 +480,24 @@ const pieData = [
     setProjectHub('');
     setOpenCreateProject(false);
   };
+  const deleteProject = async (id: string) => {
+    const confirmDelete = confirm('Tem certeza que quer apagar?');
   
+    if (!confirmDelete) return;
+  
+    const { error } = await supabase
+      .from('asp_projects')
+      .delete()
+      .eq('id', id);
+  
+    if (error) {
+      alert('Erro ao apagar ❌');
+      return;
+    }
+  
+    alert('Projeto apagado 🗑');
+    fetchProjects();
+  };
   const paretoInsights = () => {
     if (!filteredAnalyticsData.length) return null;
    
@@ -526,14 +543,14 @@ const filteredAnalyticsData = data.filter((item) => {
 
   if (analyticsStartDate && analyticsEndDate) {
     return (
-      new Date(item.inventory_date) >= new Date(analyticsStartDate)
- &&
-      item.inventory_date <= analyticsEndDate
+      new Date(item.inventory_date) >= new Date(analyticsStartDate) &&
+      new Date(item.inventory_date) <= new Date(analyticsEndDate)
     );
   }
 
   return true;
-});
+});  
+
 const paretoData = Object.values(
   filteredAnalyticsData.reduce((acc: any, item: any) => {
    const cause = item.root_cause || 'Sem causa';
@@ -553,7 +570,7 @@ const paretoData = Object.values(
     <>
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
       {/* SIDEBAR */}
-      <aside className="hidden md:block md:w-64 bg-white border-r border-gray-200 p-3 md:p-6">
+      <aside className="hidden md:block md:w-46 bg-white border-r border-gray-200 p-3 md:p-6">
       <h2 className="text-2xl font-bold mb-8 text-gray-800">
   Inventory Control
 </h2>
@@ -934,8 +951,8 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
         >
           + Criar Projeto
         </button>
-      </div>
-    </div>
+  </div>
+</div>
 {/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <Card title="Accuracy" value={`${accuracy}%`} />
@@ -1037,11 +1054,38 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
 {projects.map((p, i) => (
   <div
     key={i}
-    onClick={() => router.push(`/projects/${p.id}`)}
-    className="cursor-pointer p-3 border rounded mb-2 hover:bg-gray-100"
+    className="p-3 border rounded mb-2 flex justify-between items-center hover:bg-gray-100"
   >
-    <p className="font-semibold">{p.title}</p>
-    <p className="text-sm text-gray-500">{p.hub}</p>
+    <div
+      onClick={() => router.push(`/projects/${p.id}`)}
+      className="cursor-pointer"
+    >
+      <p className="font-semibold">{p.title}</p>
+      <p className="text-sm text-gray-500">{p.hub}</p>
+    </div>
+
+    <button
+      onClick={async () => {
+        const confirmDelete = confirm('Apagar projeto?');
+        if (!confirmDelete) return;
+
+        const { error } = await supabase
+          .from('asp_projects')
+          .delete()
+          .eq('id', p.id);
+
+        if (error) {
+          alert('Erro ao apagar ❌');
+          return;
+        }
+
+        alert('Projeto apagado 🗑');
+        fetchProjects();
+      }}
+      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+    >
+      🗑
+    </button>
   </div>
 ))}
 </div>

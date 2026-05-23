@@ -91,6 +91,34 @@ const addItem = async () => {
   
     fetchIshikawa();
   };
+  const deleteProject = async () => {
+    const confirmDelete = confirm('Tem certeza que quer apagar o projeto?');
+  
+    if (!confirmDelete) return;
+  
+    // 🔥 apaga Ishikawa primeiro
+    await supabase
+      .from('ishikawa_items')
+      .delete()
+      .eq('project_id', id);
+  
+    // 🔥 depois apaga projeto
+    const { error } = await supabase
+      .from('asp_projects')
+      .delete()
+      .eq('id', id);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao deletar projeto ❌');
+      return;
+    }
+  
+    alert('Projeto apagado 🚀');
+  
+    router.push('/');
+  };
+  
 useEffect(() => {
   if (id) fetchIshikawa();
 }, [id]);
@@ -104,6 +132,7 @@ useEffect(() => {
 
     setProject(data);
   };
+  
 
   // 🔥 BUSCAR INVENTÁRIO DO HUB DO PROJETO
   const fetchData = async (hub: string) => {
@@ -114,7 +143,39 @@ useEffect(() => {
 
     setData(data || []);
   };
-
+// 👇 👉 COLA AQUI 👇
+const saveWhys = async (itemId: string) => {
+    const { error } = await supabase
+      .from('ishikawa_items')
+      .update({
+        why1: whys.why1,
+        why2: whys.why2,
+        why3: whys.why3,
+        why4: whys.why4,
+        why5: whys.why5,
+      })
+      .eq('id', itemId);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao salvar 5 porquês ❌');
+      return;
+    }
+  
+    alert('Salvo 🚀');
+  
+    setOpenWhy(null);
+    setWhys({
+      why1: '',
+      why2: '',
+      why3: '',
+      why4: '',
+      why5: '',
+    });
+  
+    fetchIshikawa();
+  };
+  
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase
@@ -237,10 +298,19 @@ useEffect(() => {
   .filter((i) => i.category?.toLowerCase() === cat.toLowerCase())
   .map((item) => (
     <div
-      key={item.id}
-      className="text-sm bg-white text-gray-800 p-2 rounded mb-2 border"
+  key={item.id}
+  className="text-sm bg-white text-gray-800 p-2 rounded mb-2 border"
+>
+  <div className="flex justify-between items-center">
+    <p>{item.description}</p>
+
+    <button
+      onClick={() => deleteItem(item.id)}
+      className="text-red-500 text-xs hover:text-red-700"
     >
-      <p>{item.description}</p>
+      🗑
+    </button>
+  </div>
 
       {/* BOTÃO */}
       <button

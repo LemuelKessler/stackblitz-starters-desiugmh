@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import {
@@ -13,14 +13,27 @@ import {
 } from 'recharts';
 
 export default function ProjectPage() {
-  const { id } = useParams();
+
+    const router = useRouter(); // 👈 ADICIONA ESSA LINHA
+    
+    const params = useParams();
+    const id = params?.id as string;
 
   const [project, setProject] = useState<any>(null);
   const [data, setData] = useState<any[]>([]);
+  const [openWhy, setOpenWhy] = useState<string | null>(null);
+
+const [whys, setWhys] = useState<any>({
+  why1: '',
+  why2: '',
+  why3: '',
+  why4: '',
+  why5: '',
+});
 // ===== ISHIKAWA =====
 const [ishikawa, setIshikawa] = useState<any[]>([]);
 const [newItem, setNewItem] = useState('');
-const [category, setCategory] = useState('Processo');
+const [category, setCategory] = useState('Máquina');
 
 const categories = [
   'Máquina',
@@ -43,20 +56,41 @@ const fetchIshikawa = async () => {
 
 // salvar item
 const addItem = async () => {
-  if (!newItem) return;
-
-  await supabase.from('ishikawa_items').insert([
-    {
-      project_id: id,
-      category,
-      description: newItem,
-    },
-  ]);
-
-  setNewItem('');
-  fetchIshikawa();
-};
-
+    if (!newItem) return;
+  
+    const { error } = await supabase
+      .from('ishikawa_items')
+      .insert([
+        {
+          project_id: id,
+          category,
+          description: newItem,
+        },
+      ]);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao salvar ❌');
+      return;
+    }
+  
+    setNewItem('');
+    fetchIshikawa();
+  };
+  const deleteItem = async (itemId: string) => {
+    const { error } = await supabase
+      .from('ishikawa_items')
+      .delete()
+      .eq('id', itemId);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao deletar ❌');
+      return;
+    }
+  
+    fetchIshikawa();
+  };
 useEffect(() => {
   if (id) fetchIshikawa();
 }, [id]);
@@ -116,6 +150,32 @@ useEffect(() => {
 
   return (
     <div className="p-6 space-y-6">
+            <div className="mb-6 flex items-center justify-between">
+
+<div className="text-sm text-gray-500 flex items-center gap-2">
+  <span
+    onClick={() => router.push('/')}
+    className="cursor-pointer hover:text-gray-700"
+  >
+    Projetos
+  </span>
+
+  <span> / </span>
+
+  <span className="text-gray-800 font-semibold">
+    {project?.title || 'Projeto'}
+  </span>
+</div>
+
+<button
+  onClick={() => router.back()}
+  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm"
+>
+  ← Voltar
+</button>
+
+</div>
+
       {/* HEADER */}
       <div>
         <h1 className="text-2xl font-bold">{project.title}</h1>
@@ -174,15 +234,58 @@ useEffect(() => {
         <h3 className="font-semibold mb-2 text-gray-800">{cat}</h3>
 
         {ishikawa
-          .filter((i) => i.category === cat)
-          .map((item) => (
-            <div
-              key={item.id}
-              className="text-sm bg-white text-gray-800 p-2 rounded mb-1 border"
-            >
-              {item.description}
-            </div>
-          ))}
+  .filter((i) => i.category?.toLowerCase() === cat.toLowerCase())
+  .map((item) => (
+    <div
+      key={item.id}
+      className="text-sm bg-white text-gray-800 p-2 rounded mb-2 border"
+    >
+      <p>{item.description}</p>
+
+      {/* BOTÃO */}
+      <button
+        onClick={() => setOpenWhy(item.id)}
+        className="text-xs text-purple-600 mt-1"
+      >
+        + 5 Porquês
+      </button>
+
+      {/* FORM */}
+      {openWhy === item.id && (
+  <div className="mt-2 space-y-2 border p-2 rounded bg-gray-50">
+
+    {/* BOTÃO FECHAR */}
+    <div className="flex justify-end">
+      <button
+        onClick={() => setOpenWhy(null)}
+        className="text-xs text-red-500"
+      >
+        ✕ Fechar
+      </button>
+    </div>
+
+    {[1,2,3,4,5].map((n) => (
+      <input
+        key={n}
+        placeholder={`Por quê ${n}?`}
+        value={whys[`why${n}`]}
+        onChange={(e) =>
+          setWhys({ ...whys, [`why${n}`]: e.target.value })
+        }
+        className="w-full border p-1 rounded text-xs text-black"
+      />
+    ))}
+
+    <button
+      onClick={() => saveWhys(item.id)}
+      className="bg-purple-600 text-white px-2 py-1 rounded text-xs"
+    >
+      Salvar
+    </button>
+  </div>
+)}
+    </div>
+))}
       </div>
     ))}
   </div>

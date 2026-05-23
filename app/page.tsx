@@ -1213,7 +1213,7 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
        >
          <option value="">Selecionar causa</option>
          <option>LH Atrasado</option>
-         <option>Corte por desvio de forecast</option>
+         <option>Desvio de forecast</option>
          <option>Comercial</option>
          <option>Misscan</option>
          <option>OnHold</option>

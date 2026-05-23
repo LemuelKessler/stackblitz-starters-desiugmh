@@ -22,6 +22,17 @@ export default function ProjectPage() {
   const [project, setProject] = useState<any>(null);
   const [data, setData] = useState<any[]>([]);
   const [openWhy, setOpenWhy] = useState<string | null>(null);
+  const [actions, setActions] = useState<any[]>([]);
+
+const [form5w2h, setForm5w2h] = useState({
+  what: '',
+  why: '',
+  where: '',
+  when: '',
+  who: '',
+  how: '',
+  how_much: '',
+});
 
 const [whys, setWhys] = useState<any>({
   why1: '',
@@ -53,7 +64,14 @@ const fetchIshikawa = async () => {
 
   setIshikawa(data || []);
 };
-
+const fetchActions = async () => {
+    const { data } = await supabase
+      .from('actions_5w2h')
+      .select('*')
+      .eq('project_id', id);
+  
+    setActions(data || []);
+  };
 // salvar item
 const addItem = async () => {
     if (!newItem) return;
@@ -93,16 +111,8 @@ const addItem = async () => {
   };
   const deleteProject = async () => {
     const confirmDelete = confirm('Tem certeza que quer apagar o projeto?');
-  
     if (!confirmDelete) return;
   
-    // 🔥 apaga Ishikawa primeiro
-    await supabase
-      .from('ishikawa_items')
-      .delete()
-      .eq('project_id', id);
-  
-    // 🔥 depois apaga projeto
     const { error } = await supabase
       .from('asp_projects')
       .delete()
@@ -110,18 +120,20 @@ const addItem = async () => {
   
     if (error) {
       console.log(error);
-      alert('Erro ao deletar projeto ❌');
+      alert('Erro ao deletar ❌');
       return;
     }
   
     alert('Projeto apagado 🚀');
-  
     router.push('/');
   };
   
-useEffect(() => {
-  if (id) fetchIshikawa();
-}, [id]);
+  useEffect(() => {
+    if (id) {
+      fetchIshikawa();
+      fetchActions(); // 👈 ADICIONA AQUI
+    }
+  }, [id]);
   // 🔥 BUSCAR PROJETO
   const fetchProject = async () => {
     const { data } = await supabase
@@ -192,21 +204,6 @@ const saveWhys = async (itemId: string) => {
 
     if (id) load();
   }, [id]);
-
-  // 🔥 PARETO
-  const paretoData = Object.values(
-    data.reduce((acc: any, item: any) => {
-      const cause = item.root_cause || 'Sem causa';
-
-      if (!acc[cause]) {
-        acc[cause] = { cause, count: 0 };
-      }
-
-      acc[cause].count += 1;
-      return acc;
-    }, {})
-  ).sort((a: any, b: any) => b.count - a.count);
-
   if (!project) return <p className="p-6">Carregando...</p>;
 
   return (
@@ -248,7 +245,7 @@ const saveWhys = async (itemId: string) => {
         <h2 className="font-semibold mb-4">📊 Pareto de Causas</h2>
 
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={paretoData}>
+        <BarChart data={project?.pareto_data || []}>
             <XAxis dataKey="cause" />
             <YAxis />
             <Tooltip />

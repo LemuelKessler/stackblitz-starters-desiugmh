@@ -438,65 +438,51 @@ export default function Home() {
   ).length;
 
   const createProject = async () => {
-    if (!projectName || !projectHub) {
+    if (!projectName || !analyticsHub) {
       alert('Preenche tudo ❌');
       return;
     }
-
-    const relatedItems = data.filter(
-      (item) => item.hub === projectHub
-    );
-
-    const totalItems = relatedItems.length;
-
-    const causes = relatedItems.reduce((acc: any, item: any) => {
-      const cause = item.root_cause?.trim() || 'Sem causa';
-      acc[cause] = (acc[cause] || 0) + 1;
-      return acc;
-    }, {});
-
-    const mainCause =
-      Object.entries(causes).sort(
-        (a: any, b: any) => b[1] - a[1]
-      )[0]?.[0] || 'Sem causa';
-
+  
+    // 🔥 usa os dados filtrados do analytics
+    const snapshotData = filteredAnalyticsData;
+  
+    // 🔥 gera pareto no momento
+    const paretoSnapshot = Object.values(
+      snapshotData.reduce((acc: any, item: any) => {
+        const cause = item.root_cause || 'Sem causa';
+  
+        if (!acc[cause]) {
+          acc[cause] = { cause, count: 0 };
+        }
+  
+        acc[cause].count += 1;
+        return acc;
+      }, {})
+    ).sort((a: any, b: any) => b.count - a.count);
+  
     const { error } = await supabase.from('asp_projects').insert([
       {
         title: projectName,
-        hub: projectHub,
+        hub: analyticsHub,
+        start_date: analyticsStartDate,
+        end_date: analyticsEndDate,
+  
+        // 🔥 FOTO DO PARETO
+        pareto_data: paretoSnapshot,
+  
         status: 'aberto',
         created_at: new Date().toISOString(),
       },
     ]);
-
+  
     if (error) {
       console.log(error);
       alert('Erro ao criar ❌');
       return;
     }
-    await fetchProjects();
-
-    alert(`Projeto criado 🚀`);
-    setProjectName('');
-    setProjectHub('');
+  
+    alert('Projeto criado com snapshot 🚀');
     setOpenCreateProject(false);
-  };
-  const deleteProject = async (id: string) => {
-    const confirmDelete = confirm('Tem certeza que quer apagar?');
-
-    if (!confirmDelete) return;
-
-    const { error } = await supabase
-      .from('asp_projects')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      alert('Erro ao apagar ❌');
-      return;
-    }
-
-    alert('Projeto apagado 🗑');
     fetchProjects();
   };
   const paretoInsights = () => {
@@ -956,24 +942,7 @@ onClick={() => setOpenCreateProject(true)}
 </button>
  </div>
  </div>
- {/* LISTA DE PROJETOS */}
-<div className="bg-white p-6 rounded border mb-6">
-  <h2 className="font-semibold mb-4">📁 Projetos</h2>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {projects.map((project) => (
-  <div
-    key={project.id}
-    onClick={() => router.push(`/projects/${project.id}`)} // 👈 AQUI
-    className="cursor-pointer border p-4 rounded hover:shadow transition"
-  >
-    <h3 className="font-bold">{project.title}</h3>
-    <p className="text-sm text-gray-500">{project.hub}</p>
-  </div>
-))}
-
-  </div>
-</div>
+ 
               {/* resto do analytics continua aqui */}    {/* ===== KPIs GERAIS ===== */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <Card title="Accuracy" value={`${accuracy}%`} />
@@ -1065,6 +1034,36 @@ onClick={() => setOpenCreateProject(true)}
     </div>
   </div>
 )}
+{/* LISTA DE PROJETOS */}
+<div className="bg-white p-6 rounded border mb-6">
+  <h2 className="font-semibold mb-4">📁 Projetos</h2>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {projects.map((project) => (
+  <div
+    key={project.id}
+    className="border p-4 rounded hover:shadow transition flex justify-between items-center"
+  >
+    <div
+      onClick={() => router.push(`/projects/${project.id}`)}
+      className="cursor-pointer"
+    >
+      <h3 className="font-bold">{project.title}</h3>
+      <p className="text-sm text-gray-500">{project.hub}</p>
+    </div>
+
+    {/* BOTÃO DELETE */}
+    <button
+      onClick={() => deleteProject(project.id)}
+      className="text-red-500 text-sm hover:text-red-700"
+    >
+      🗑
+    </button>
+  </div>
+))}
+
+  </div>
+</div>
             </div>
           )}
         </div>

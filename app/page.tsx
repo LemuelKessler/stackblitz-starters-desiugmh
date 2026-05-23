@@ -470,6 +470,7 @@ const pieData = [
     setProjectName('');
     setProjectHub('');
     setOpenCreateProject(false);
+document.body.style.overflow = 'auto';
   };  const createASPFromCause = async (cause: string) => {
     if (!cause) {
       alert('Causa inválida ❌');
@@ -1172,7 +1173,7 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
     
       {/* ===== MODAL COLAR BRs (FIXADO) ===== */}
       {openPasteModal && (
-     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
+     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[99999] backdrop-blur-sm">
      <div className="bg-white p-6 rounded-xl w-[400px] shadow-xl text-gray-800">
    
        <h2 className="text-xl font-bold mb-4">
@@ -1255,7 +1256,7 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
       {/* ===== MODAL CREATE PROJECT ===== */}
       {openCreateProject && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999]">
-          <div className="bg-white p-6 rounded-xl w-[400px]">
+          <div className="bg-white p-6 rounded-2xl w-[400px] shadow-2xl animate-scaleIn">
     
             <h2 className="text-xl font-bold mb-4">
               Criar Projeto ASP
@@ -1304,3 +1305,4 @@ className="flex-1 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded font-
         </div>
       )}
       </>)}
+

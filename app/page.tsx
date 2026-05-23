@@ -58,6 +58,9 @@ export default function Home() {
 const [visibleCount, setVisibleCount] = useState(20);
 const [selectedHub, setSelectedHub] = useState('');
 const [selectedDate, setSelectedDate] = useState('');
+const [analyticsHub, setAnalyticsHub] = useState('');
+const [analyticsStartDate, setAnalyticsStartDate] = useState('');
+const [analyticsEndDate, setAnalyticsEndDate] = useState('');
   // filtros
   const [inventoryDate, setInventoryDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -492,14 +495,14 @@ const pieData = [
   };
   
   const paretoInsights = () => {
-    if (!data.length) return null;
-  
+    if (!filteredAnalyticsData.length) return null;
+   
     const causeMap: any = {};
-  
-    data.forEach((item) => {
-      const cause = item.root_cause || 'Não definido';
-      causeMap[cause] = (causeMap[cause] || 0) + 1;
-    });
+   
+    filteredAnalyticsData.forEach((item) => {
+     const cause = item.root_cause || 'Não definido';
+     causeMap[cause] = (causeMap[cause] || 0) + 1;
+   });
   
     const sorted = Object.entries(causeMap)
       .map(([cause, value]) => ({ cause, value }))
@@ -528,23 +531,37 @@ const pieData = [
       criticalList: critical,
     };
   };
-  const paretoData = Object.values(
-    data.reduce((acc: any, item: any) => {
-      const cause = item.root_cause || 'Sem causa';
-  
-      if (!acc[cause]) {
-        acc[cause] = {
-          cause,
-          count: 0,
-        };
-      }
-  
-      acc[cause].count += 1;
-  
-      return acc;
-    }, {})
-  )
-  .sort((a: any, b: any) => b.count - a.count);
+  // ==========================
+// FILTRO ANALYTICS (PASSO 2)
+// ==========================
+const filteredAnalyticsData = data.filter((item) => {
+  if (analyticsHub && item.hub !== analyticsHub) return false;
+
+  if (analyticsStartDate && analyticsEndDate) {
+    return (
+      new Date(item.inventory_date) >= new Date(analyticsStartDate)
+ &&
+      item.inventory_date <= analyticsEndDate
+    );
+  }
+
+  return true;
+});
+const paretoData = Object.values(
+  filteredAnalyticsData.reduce((acc: any, item: any) => {
+   const cause = item.root_cause || 'Sem causa';
+ 
+   if (!acc[cause]) {
+     acc[cause] = {
+       cause,
+       count: 0,
+     };
+   }
+ 
+   acc[cause].count += 1;
+   return acc;
+ }, {})
+ ).sort((a: any, b: any) => b.count - a.count);
   return (
     <>
     <main className="flex flex-col md:flex-row min-h-screen bg-gray-100 text-gray-800">
@@ -943,7 +960,37 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
     {/* 👇 E COLOCA O PARETO AQUI */}
     <div className="bg-white p-6 rounded border">
   <h2 className="mb-4 font-semibold">Pareto de Causas</h2>
+  <div className="flex gap-4 mb-4 flex-wrap">
 
+<select
+ value={analyticsHub}
+ onChange={(e) => setAnalyticsHub(e.target.value)}
+ className="bg-gray-800 text-white p-2 rounded"
+>
+<option value="">Todos HUBs</option>
+<option value="LRJ-02">LRJ-02</option>
+<option value="LRJ-08">LRJ-08</option>
+<option value="LRJ-13">LRJ-13</option>
+<option value="LRJ-15">LRJ-15</option>
+<option value="LRJ-19">LRJ-19</option>
+<option value="LRJ-23">LRJ-23</option>
+</select>
+
+<input
+ type="date"
+ value={analyticsStartDate}
+ onChange={(e) => setAnalyticsStartDate(e.target.value)}
+ className="bg-gray-800 text-white p-2 rounded"
+/>
+
+<input
+ type="date"
+ value={analyticsEndDate}
+ onChange={(e) => setAnalyticsEndDate(e.target.value)}
+ className="bg-gray-800 text-white p-2 rounded"
+/>
+
+</div>
   <ResponsiveContainer width="100%" height={400}>
     <BarChart data={paretoData}>
       <XAxis dataKey="cause" />

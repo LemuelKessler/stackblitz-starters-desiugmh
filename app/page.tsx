@@ -5,6 +5,7 @@ import {
   Cell,
   Legend,
 } from 'recharts';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import { supabase } from '@/lib/supabase';
@@ -36,7 +37,7 @@ function Card({ title, value, color }: any) {
 }
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
-
+  const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [lossData, setLossData] = useState<any[]>([]);
 
@@ -425,24 +426,107 @@ const pieData = [
       return;
     }
   
+    // pega dados filtrados do dashboard
+    const relatedItems = data.filter(
+      (item) => item.hub === projectHub
+    );
+  
+    // calcula impacto
+    const totalItems = relatedItems.length;
+  
+    const causes = relatedItems.reduce((acc: any, item: any) => {
+      const cause = item.root_cause || 'Sem causa';
+      acc[cause] = (acc[cause] || 0) + 1;
+      return acc;
+    }, {});
+  
+    // pega principal causa
+    const mainCause = Object.entries(causes).sort(
+      (a: any, b: any) => b[1] - a[1]
+    )[0]?.[0];
+  
     const { error } = await supabase.from('asp_projects').insert([
       {
         title: projectName,
         hub: projectHub,
         status: 'aberto',
+        cause: mainCause, // 👈 NOVO
+        volume: totalItems, // 👈 NOVO
+        created_at: new Date().toISOString(),
       },
     ]);
   
     if (error) {
+      console.log(error);
       alert('Erro ao criar ❌');
       return;
     }
   
-    alert('Projeto criado 🚀');
-  
+    alert(`Projeto criado 🚀 (Causa: ${mainCause})`);
+    
     setProjectName('');
     setProjectHub('');
     setOpenCreateProject(false);
+  };  const createASPFromCause = async (cause: string) => {
+    if (!cause) {
+      alert('Causa inválida ❌');
+      return;
+    }
+  
+    const { error } = await supabase.from('asp_projects').insert([
+      {
+        title: `ASP - ${mainCause} (${projectHub})`,
+        hub: hubFilter || 'Geral',
+        cause: cause,
+        status: 'aberto',
+      },
+    ]);
+  
+    if (error) {
+      console.log(error);
+      alert('Erro ao criar ASP ❌');
+      return;
+    }
+  
+    alert(`ASP criada para: ${cause} 🚀`);
+  };
+  
+  const paretoInsights = () => {
+    if (!data.length) return null;
+  
+    const causeMap: any = {};
+  
+    data.forEach((item) => {
+      const cause = item.root_cause || 'Não definido';
+      causeMap[cause] = (causeMap[cause] || 0) + 1;
+    });
+  
+    const sorted = Object.entries(causeMap)
+      .map(([cause, value]) => ({ cause, value }))
+      .sort((a: any, b: any) => b.value - a.value);
+  
+    const total = sorted.reduce((acc, i) => acc + i.value, 0);
+  
+    let cumulative = 0;
+  
+    const enriched = sorted.map((item) => {
+      cumulative += item.value;
+      return {
+        ...item,
+        percent: (item.value / total) * 100,
+        cumulative: (cumulative / total) * 100,
+      };
+    });
+  
+    const critical = enriched.filter((i) => i.cumulative <= 80);
+  
+    return {
+      totalCauses: enriched.length,
+      criticalCauses: critical.length,
+      criticalPercent: ((critical.length / enriched.length) * 100).toFixed(1),
+      mainCause: enriched[0],
+      criticalList: critical,
+    };
   };
   const paretoData = Object.values(
     data.reduce((acc: any, item: any) => {
@@ -869,7 +953,48 @@ className="bg-gray-800 text-white px-4 py-2 rounded"
     </BarChart>
   </ResponsiveContainer>
 </div>
+{paretoInsights() && (
+  <div className="bg-white p-6 rounded-xl border mt-6">
+    <h2 className="text-lg font-bold mb-4">
+      🎯 Análise 80/20 (Pareto)
+    </h2>
 
+    <div className="space-y-3 text-sm">
+
+      <p>
+        🔥 <b>{paretoInsights().criticalCauses}</b> causas geram{" "}
+        <b>80% dos problemas</b>
+      </p>
+
+      <p>
+        📊 Isso representa apenas{" "}
+        <b>{paretoInsights().criticalPercent}%</b> das causas totais
+      </p>
+
+      <p>
+        🎯 <b>Foco operacional:</b> atacar essas causas primeiro
+      </p>
+
+      <div>
+        <p className="font-semibold mt-2">🚨 Causas prioritárias:</p>
+        <ul className="list-disc pl-5">
+          {paretoInsights().criticalList.map((item: any, i: number) => (
+            <li key={i}>
+              {item.cause} ({item.cumulative.toFixed(1)}% acumulado)
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <p className="mt-2">
+        🏆 Principal causa:{" "}
+        <b>{paretoInsights().mainCause.cause}</b> (
+        {paretoInsights().mainCause.percent.toFixed(1)}%)
+      </p>
+
+    </div>
+  </div>
+)}
     {/* ===== INSIGHTS AUTOMÁTICOS ===== */}
     <div className="bg-white p-3 md:p-6 rounded border">
       <h2 className="mb-4 font-semibold">Insights</h2>

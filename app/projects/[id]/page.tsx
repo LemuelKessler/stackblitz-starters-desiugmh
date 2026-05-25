@@ -399,19 +399,58 @@ const saveAction = async () => {
 <div className="bg-white p-6 rounded border">
   <h2 className="font-semibold mb-4">📋 Plano de Ação (5W2H)</h2>
 
-  <input
-    placeholder="What (o que será feito)"
-    value={form5w2h.what}
-    onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
-    className="border p-2 rounded w-full mb-2"
-  />
+<input
+  placeholder="What (o que será feito)"
+  value={form5w2h.what}
+  onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
 
-  <input
-    placeholder="Who (responsável)"
-    value={form5w2h.who}
-    onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
-    className="border p-2 rounded w-full mb-2"
-  />
+<input
+  placeholder="Who (responsável)"
+  value={form5w2h.who}
+  onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+{/* 👇 COLA AQUI 👇 */}
+
+<input
+  placeholder="Why (por quê)"
+  value={form5w2h.why}
+  onChange={(e) => setForm5w2h({ ...form5w2h, why: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+<input
+  placeholder="Where (onde)"
+  value={form5w2h.where}
+  onChange={(e) => setForm5w2h({ ...form5w2h, where: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+<input
+  placeholder="When (quando)"
+  value={form5w2h.when}
+  onChange={(e) => setForm5w2h({ ...form5w2h, when: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+<input
+  placeholder="How (como)"
+  value={form5w2h.how}
+  onChange={(e) => setForm5w2h({ ...form5w2h, how: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+<input
+  placeholder="How much (custo)"
+  value={form5w2h.how_much}
+  onChange={(e) => setForm5w2h({ ...form5w2h, how_much: e.target.value })}
+  className="border p-2 rounded w-full mb-2"
+/>
+
+{/* 👆 ATÉ AQUI */}
 
   <button
     onClick={saveAction}

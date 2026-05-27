@@ -23,6 +23,21 @@ export default function ProjectPage() {
   const [data, setData] = useState<any[]>([]);
   const [openWhy, setOpenWhy] = useState<string | null>(null);
   const [actions, setActions] = useState<any[]>([]);
+  const [aspForm, setAspForm] = useState({
+    descricao_problema: '',
+    data_inicio: '',
+    data_fim: '',
+    lider: '',
+    numero_referencia: '',
+    qa_responsavel: '',
+    tipo_estudo: '',
+    operacao: '',
+    equipe: '',
+    meta: '',
+    historico: '',
+    categoria: [] as string[],
+    desperdicios: [] as string[],
+  });
 
 const [form5w2h, setForm5w2h] = useState({
   what: '',
@@ -54,16 +69,7 @@ const categories = [
   'Meio ambiente',
   'Material',
 ];
-const [aspForm, setAspForm] = useState({
-  problem: '',
-  start_date: '',
-  end_date: '',
-  leader: '',
-  category: '',
-  description: '',
-  goal: '',
-  history: '',
-});
+
 // buscar itens
 const fetchIshikawa = async () => {
   const { data } = await supabase
@@ -251,21 +257,7 @@ const saveAction = async () => {
     if (id) load();
   }, [id]);
   if (!project) return <p className="p-6">Carregando...</p>;
-  const [aspForm, setAspForm] = useState({
-    descricao_problema: '',
-    data_inicio: '',
-    data_fim: '',
-    lider: '',
-    numero_referencia: '',
-    qa_responsavel: '',
-    tipo_estudo: '',
-    operacao: '',
-    equipe: '',
-    meta: '',
-    historico: '',
-    categoria: [] as string[],
-    desperdicios: [] as string[],
-  });
+  
   return (
     <div className="p-6 space-y-6">
             <div className="mb-6 flex items-center justify-between">

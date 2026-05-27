@@ -281,7 +281,7 @@ const chartData = paretoData.map((item: any) => {
 });
   return (
     <div className="p-6 space-y-6">
-            <div className="mb-6 flex items-center justify-between">
+<div className="mb-6 flex items-center justify-between">
 
 <div className="text-sm text-gray-500 flex items-center gap-2">
   <span

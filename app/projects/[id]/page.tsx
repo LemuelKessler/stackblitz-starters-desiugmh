@@ -1,5 +1,6 @@
 'use client';
 
+import { Line, CartesianGrid, ReferenceLine } from 'recharts';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -10,6 +11,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  
 } from 'recharts';
 
 export default function ProjectPage() {
@@ -258,6 +260,25 @@ const saveAction = async () => {
   }, [id]);
   if (!project) return <p className="p-6">Carregando...</p>;
   
+  const paretoData = (project?.pareto_data || [])
+  .sort((a: any, b: any) => Number(b.count) - Number(a.count));
+
+const total = paretoData.reduce(
+  (sum: number, item: any) => sum + Number(item.count),
+  0
+);
+
+let cumulative = 0;
+
+const chartData = paretoData.map((item: any) => {
+  cumulative += Number(item.count);
+
+  return {
+    cause: item.cause,
+    count: Number(item.count),
+    cumulative: Number(((cumulative / total) * 100).toFixed(1)),
+  };
+});
   return (
     <div className="p-6 space-y-6">
             <div className="mb-6 flex items-center justify-between">
@@ -357,14 +378,43 @@ const saveAction = async () => {
       <div className="bg-white p-6 rounded border">
       <h2 className="font-semibold mb-4 text-gray-800">📊 Pareto de Causas</h2>
 
-        <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={project?.pareto_data || []}>
-            <XAxis dataKey="cause" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="count" fill="#f97316" />
-          </BarChart>
-        </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={350}>
+  <BarChart data={chartData}>
+    <CartesianGrid strokeDasharray="3 3" />
+
+    <XAxis
+  dataKey="cause"
+  interval={0}
+  angle={-30}
+  textAnchor="end"
+  height={100}
+/>
+
+    <YAxis yAxisId="left" />
+    <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+
+    <Tooltip />
+
+    <Bar yAxisId="left" dataKey="count" fill="#f97316" />
+
+    <Line
+  yAxisId="right"
+  type="monotone"
+  dataKey="cumulative"
+  stroke="#2563eb"
+  strokeWidth={3}
+  dot={{ r: 3 }}
+  activeDot={{ r: 6 }}
+/>
+    <ReferenceLine
+  yAxisId="right"
+  y={80}
+  stroke="red"
+  strokeDasharray="4 4"
+  label="80%"
+/>
+  </BarChart>
+</ResponsiveContainer>
       </div>
       {/* ISHIKAWA */}
       <div className="bg-white p-6 rounded border text-gray-800">
@@ -475,73 +525,88 @@ const saveAction = async () => {
 <div className="bg-white p-6 rounded border">
 <h2 className="font-semibold mb-4 text-gray-800">📋 Plano de Ação (5W2H)</h2>
 
-<input
-  placeholder="What (o que será feito)"
-  value={form5w2h.what}
-  onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-<input
-  placeholder="Who (responsável)"
-  value={form5w2h.who}
-  onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div>
+    <label className="text-sm text-gray-600">What (o que será feito)</label>
+    <input
+      value={form5w2h.what}
+      onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-{/* 👇 COLA AQUI 👇 */}
+  <div>
+    <label className="text-sm text-gray-600">Who (responsável)</label>
+    <input
+      value={form5w2h.who}
+      onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-<input
-  placeholder="Why (por quê)"
-  value={form5w2h.why}
-  onChange={(e) => setForm5w2h({ ...form5w2h, why: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div>
+    <label className="text-sm text-gray-600">Why (por quê)</label>
+    <input
+      value={form5w2h.why}
+      onChange={(e) => setForm5w2h({ ...form5w2h, why: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-<input
-  placeholder="Where (onde)"
-  value={form5w2h.where}
-  onChange={(e) => setForm5w2h({ ...form5w2h, where: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div>
+    <label className="text-sm text-gray-600">Where (onde)</label>
+    <input
+      value={form5w2h.where}
+      onChange={(e) => setForm5w2h({ ...form5w2h, where: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-<input
-  placeholder="When (quando)"
-  value={form5w2h.when}
-  onChange={(e) => setForm5w2h({ ...form5w2h, when: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div>
+    <label className="text-sm text-gray-600">When (quando)</label>
+    <input
+      value={form5w2h.when}
+      onChange={(e) => setForm5w2h({ ...form5w2h, when: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-<input
-  placeholder="How (como)"
-  value={form5w2h.how}
-  onChange={(e) => setForm5w2h({ ...form5w2h, how: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div>
+    <label className="text-sm text-gray-600">How (como)</label>
+    <input
+      value={form5w2h.how}
+      onChange={(e) => setForm5w2h({ ...form5w2h, how: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-<input
-  placeholder="How much (custo)"
-  value={form5w2h.how_much}
-  onChange={(e) => setForm5w2h({ ...form5w2h, how_much: e.target.value })}
-  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
+  <div className="md:col-span-2">
+    <label className="text-sm text-gray-600">How much (custo)</label>
+    <input
+      value={form5w2h.how_much}
+      onChange={(e) => setForm5w2h({ ...form5w2h, how_much: e.target.value })}
+      className="mt-1 w-full border border-gray-300 p-2 rounded bg-white text-gray-800"
+    />
+  </div>
 
-{/* 👆 ATÉ AQUI */}
+</div>
 
-  <button
-    onClick={saveAction}
-    className="bg-green-600 text-white px-4 py-2 rounded"
-  >
-    + Criar ação
-  </button>
-
+<button
+  onClick={saveAction}
+  className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+>
+  + Criar ação
+</button>
   <div className="mt-4">
   {actions.map((a) => (
-  <div className="border border-gray-200 p-3 rounded mb-2 text-sm space-y-1 bg-white text-gray-800">
-    
-    <p><strong>O que:</strong> {a.what}</p>
-    <p><strong>Quem:</strong> {a.who}</p>
-
-    {a.why && <p><strong>Por quê:</strong> {a.why}</p>}
-    {a.where && <p><strong>Onde:</strong> {a.where}</p>}
-    {a.when && <p><strong>Quando:</strong> {a.when}</p>}
-    {a.how && <p><strong>Como:</strong> {a.how}</p>}
-    {a.how_much && <p><strong>Custo:</strong> {a.how_much}</p>}
-
-  </div>
+    <div className="border border-gray-200 p-4 rounded-lg mb-3 bg-gray-50 shadow-sm">    
+     {a.why && <p>🎯 {a.why}</p>}
+  {a.where && <p>📍 {a.where}</p>}
+  {a.when && <p>📅 {a.when}</p>}
+  {a.how && <p>⚙️ {a.how}</p>}
+  {a.how_much && <p>💰 {a.how_much}</p>}
+</div>
 ))}
   </div>
 </div>

@@ -293,7 +293,7 @@ const saveAction = async () => {
       </div>
 {/* ===== FORMULÁRIO ASP ===== */}
 <div className="bg-white p-6 rounded border space-y-4">
-  <h2 className="font-semibold text-lg">📋 Análise do Problema (ASP)</h2>
+<h2 className="font-semibold mb-4 text-gray-800">📋 Análise do Problema (ASP)</h2>
 
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
     <input
@@ -355,7 +355,7 @@ const saveAction = async () => {
 </div>
       {/* PARETO */}
       <div className="bg-white p-6 rounded border">
-        <h2 className="font-semibold mb-4">📊 Pareto de Causas</h2>
+      <h2 className="font-semibold mb-4 text-gray-800">📊 Pareto de Causas</h2>
 
         <ResponsiveContainer width="100%" height={300}>
         <BarChart data={project?.pareto_data || []}>
@@ -473,21 +473,19 @@ const saveAction = async () => {
 
 {/* ===== 5W2H ===== */}
 <div className="bg-white p-6 rounded border">
-  <h2 className="font-semibold mb-4">📋 Plano de Ação (5W2H)</h2>
+<h2 className="font-semibold mb-4 text-gray-800">📋 Plano de Ação (5W2H)</h2>
 
 <input
   placeholder="What (o que será feito)"
   value={form5w2h.what}
   onChange={(e) => setForm5w2h({ ...form5w2h, what: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 <input
   placeholder="Who (responsável)"
   value={form5w2h.who}
   onChange={(e) => setForm5w2h({ ...form5w2h, who: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 {/* 👇 COLA AQUI 👇 */}
 
@@ -495,36 +493,31 @@ const saveAction = async () => {
   placeholder="Why (por quê)"
   value={form5w2h.why}
   onChange={(e) => setForm5w2h({ ...form5w2h, why: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 <input
   placeholder="Where (onde)"
   value={form5w2h.where}
   onChange={(e) => setForm5w2h({ ...form5w2h, where: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 <input
   placeholder="When (quando)"
   value={form5w2h.when}
   onChange={(e) => setForm5w2h({ ...form5w2h, when: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 <input
   placeholder="How (como)"
   value={form5w2h.how}
   onChange={(e) => setForm5w2h({ ...form5w2h, how: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 <input
   placeholder="How much (custo)"
   value={form5w2h.how_much}
   onChange={(e) => setForm5w2h({ ...form5w2h, how_much: e.target.value })}
-  className="border p-2 rounded w-full mb-2"
-/>
+  className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"/>
 
 {/* 👆 ATÉ AQUI */}
 
@@ -537,7 +530,7 @@ const saveAction = async () => {
 
   <div className="mt-4">
   {actions.map((a) => (
-  <div key={a.id} className="border p-3 rounded mb-2 text-sm space-y-1">
+  <div className="border border-gray-200 p-3 rounded mb-2 text-sm space-y-1 bg-white text-gray-800">
     
     <p><strong>O que:</strong> {a.what}</p>
     <p><strong>Quem:</strong> {a.who}</p>

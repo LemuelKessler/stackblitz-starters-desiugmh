@@ -54,7 +54,16 @@ const categories = [
   'Meio ambiente',
   'Material',
 ];
-
+const [aspForm, setAspForm] = useState({
+  problem: '',
+  start_date: '',
+  end_date: '',
+  leader: '',
+  category: '',
+  description: '',
+  goal: '',
+  history: '',
+});
 // buscar itens
 const fetchIshikawa = async () => {
   const { data } = await supabase
@@ -242,7 +251,21 @@ const saveAction = async () => {
     if (id) load();
   }, [id]);
   if (!project) return <p className="p-6">Carregando...</p>;
-
+  const [aspForm, setAspForm] = useState({
+    descricao_problema: '',
+    data_inicio: '',
+    data_fim: '',
+    lider: '',
+    numero_referencia: '',
+    qa_responsavel: '',
+    tipo_estudo: '',
+    operacao: '',
+    equipe: '',
+    meta: '',
+    historico: '',
+    categoria: [] as string[],
+    desperdicios: [] as string[],
+  });
   return (
     <div className="p-6 space-y-6">
             <div className="mb-6 flex items-center justify-between">
@@ -276,7 +299,68 @@ const saveAction = async () => {
         <h1 className="text-2xl font-bold">{project.title}</h1>
         <p className="text-gray-500">HUB: {project.hub}</p>
       </div>
+{/* ===== FORMULÁRIO ASP ===== */}
+<div className="bg-white p-6 rounded border space-y-4">
+  <h2 className="font-semibold text-lg">📋 Análise do Problema (ASP)</h2>
 
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <input
+      placeholder="Descrição do problema"
+      value={aspForm.problem}
+      onChange={(e) => setAspForm({ ...aspForm, problem: e.target.value })}
+      className="border p-2 rounded"
+    />
+
+    <input
+      type="date"
+      value={aspForm.start_date}
+      onChange={(e) => setAspForm({ ...aspForm, start_date: e.target.value })}
+      className="border p-2 rounded"
+    />
+
+    <input
+      type="date"
+      value={aspForm.end_date}
+      onChange={(e) => setAspForm({ ...aspForm, end_date: e.target.value })}
+      className="border p-2 rounded"
+    />
+  </div>
+
+  <input
+    placeholder="Líder da análise"
+    value={aspForm.leader}
+    onChange={(e) => setAspForm({ ...aspForm, leader: e.target.value })}
+    className="border p-2 rounded w-full"
+  />
+
+  <input
+    placeholder="Categoria (Inbound, Outbound, etc)"
+    value={aspForm.category}
+    onChange={(e) => setAspForm({ ...aspForm, category: e.target.value })}
+    className="border p-2 rounded w-full"
+  />
+
+  <textarea
+    placeholder="1) Descrição detalhada do problema"
+    value={aspForm.description}
+    onChange={(e) => setAspForm({ ...aspForm, description: e.target.value })}
+    className="border p-2 rounded w-full"
+  />
+
+  <textarea
+    placeholder="2) Meta"
+    value={aspForm.goal}
+    onChange={(e) => setAspForm({ ...aspForm, goal: e.target.value })}
+    className="border p-2 rounded w-full"
+  />
+
+  <textarea
+    placeholder="3) Histórico do problema"
+    value={aspForm.history}
+    onChange={(e) => setAspForm({ ...aspForm, history: e.target.value })}
+    className="border p-2 rounded w-full"
+  />
+</div>
       {/* PARETO */}
       <div className="bg-white p-6 rounded border">
         <h2 className="font-semibold mb-4">📊 Pareto de Causas</h2>

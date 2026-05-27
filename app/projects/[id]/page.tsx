@@ -58,6 +58,7 @@ const [whys, setWhys] = useState<any>({
   why4: '',
   why5: '',
 });
+
 // ===== ISHIKAWA =====
 const [ishikawa, setIshikawa] = useState<any[]>([]);
 const [newItem, setNewItem] = useState('');
@@ -463,7 +464,7 @@ const chartData = paretoData.map((item: any) => {
 >
   <div className="flex justify-between items-center">
     <p>{item.description}</p>
-
+    
     <button
       onClick={() => deleteItem(item.id)}
       className="text-red-500 text-xs hover:text-red-700"
@@ -479,7 +480,14 @@ const chartData = paretoData.map((item: any) => {
       >
         + 5 Porquês
       </button>
-
+      <button
+  onClick={() =>
+    setShowWhy(showWhy === item.id ? null : item.id)
+  }
+  className="text-xs text-blue-600 mt-1 ml-2"
+>
+  👁 Ver análise
+</button>
       {/* FORM */}
       {openWhy === item.id && (
   <div className="mt-2 space-y-2 border p-2 rounded bg-gray-50">
@@ -493,7 +501,7 @@ const chartData = paretoData.map((item: any) => {
         ✕ Fechar
       </button>
     </div>
-
+    
     {[1,2,3,4,5].map((n) => (
       <input
         key={n}
@@ -520,7 +528,72 @@ const chartData = paretoData.map((item: any) => {
     ))}
 </div>
 </div>
+{/* ===== TABELA 5 PORQUÊS ===== */}
+<div className="bg-white p-6 rounded border">
+  <h2 className="font-semibold mb-4 text-gray-800">
+    🧩 Análise de Causas (5 Porquês)
+  </h2>
 
+  <div className="overflow-auto">
+    <table className="w-full text-sm border">
+      <thead className="bg-gray-100 text-gray-700">
+        <tr>
+          <th className="p-2 border">Causa</th>
+          <th className="p-2 border">Por quê 1</th>
+          <th className="p-2 border">Por quê 2</th>
+          <th className="p-2 border">Por quê 3</th>
+          <th className="p-2 border">Por quê 4</th>
+          <th className="p-2 border">Por quê 5</th>
+          <th className="p-2 border">Salvar</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {ishikawa.map((item) => (
+          <tr key={item.id} className="border-t">
+            <td className="p-2 border font-medium">
+              {item.description}
+            </td>
+
+            {[1,2,3,4,5].map((n) => (
+              <td key={n} className="p-1 border">
+                <input
+                  defaultValue={item[`why${n}`] || ''}
+                  onChange={(e) => {
+                    item[`why${n}`] = e.target.value;
+                  }}
+                  className="w-full border p-1 rounded text-xs"
+                />
+              </td>
+            ))}
+
+            <td className="p-2 border">
+              <button
+                onClick={async () => {
+                  await supabase
+                    .from('ishikawa_items')
+                    .update({
+                      why1: item.why1,
+                      why2: item.why2,
+                      why3: item.why3,
+                      why4: item.why4,
+                      why5: item.why5,
+                    })
+                    .eq('id', item.id);
+
+                  alert('Salvo 🚀');
+                }}
+                className="bg-green-600 text-white px-2 py-1 rounded text-xs"
+              >
+                💾
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
 {/* ===== 5W2H ===== */}
 <div className="bg-white p-6 rounded border">
 <h2 className="font-semibold mb-4 text-gray-800">📋 Plano de Ação (5W2H)</h2>

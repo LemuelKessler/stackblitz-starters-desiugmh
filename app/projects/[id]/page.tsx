@@ -300,21 +300,21 @@ const saveAction = async () => {
       placeholder="Descrição do problema"
       value={aspForm.problem}
       onChange={(e) => setAspForm({ ...aspForm, problem: e.target.value })}
-      className="border p-2 rounded"
+      className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
     />
 
     <input
       type="date"
       value={aspForm.start_date}
       onChange={(e) => setAspForm({ ...aspForm, start_date: e.target.value })}
-      className="border p-2 rounded"
+      className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
     />
 
     <input
       type="date"
       value={aspForm.end_date}
       onChange={(e) => setAspForm({ ...aspForm, end_date: e.target.value })}
-      className="border p-2 rounded"
+      className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
     />
   </div>
 

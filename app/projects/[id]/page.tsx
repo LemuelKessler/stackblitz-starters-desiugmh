@@ -473,21 +473,7 @@ const chartData = paretoData.map((item: any) => {
     </button>
   </div>
 
-      {/* BOTÃO */}
-      <button
-        onClick={() => setOpenWhy(item.id)}
-        className="text-xs text-purple-600 mt-1"
-      >
-        + 5 Porquês
-      </button>
-      <button
-  onClick={() =>
-    setShowWhy(showWhy === item.id ? null : item.id)
-  }
-  className="text-xs text-blue-600 mt-1 ml-2"
->
-  👁 Ver análise
-</button>
+      
       {/* FORM */}
       {openWhy === item.id && (
   <div className="mt-2 space-y-2 border p-2 rounded bg-gray-50">

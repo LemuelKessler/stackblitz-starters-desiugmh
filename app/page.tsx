@@ -187,32 +187,32 @@ export default function Home() {
   // ==========================
   // UPLOAD INVENTORY
   // ==========================
-  // ==========================
-  const handleFileUpload = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) return;
 
-    Papa.parse(file, {
-      skipEmptyLines: true,
-      complete: async (res) => {
-        const rows = res.data;
-        const headers = rows[0];
+const handleFileUpload = (event: any) => {
+const file = event.target.files[0];
+if (!file) return;
 
-        const getIndex = (name: string) =>
-          headers.findIndex((h: string) =>
-            h?.toLowerCase().includes(name)
-          );
+Papa.parse(file, {
+skipEmptyLines: true,
+complete: async (res) => {
+const rows = res.data;
+const headers = rows[0];
 
-        const formatted = rows.slice(1).map((row: any) => ({
-          tracking: row[getIndex('tracking')] || '',
-          hub: hub, // vem do select do modal
-          inventory_date: inventoryDate,
-          aging: row[getIndex('aging')] || '',
-          count_type: row[getIndex('count')] || '',
-          expected: row[getIndex('expected')] || '',
-          on_hold: Number(row[getIndex('on_hold')] || 0),
-          created_at: new Date().toISOString(),
-        }));
+const getIndex = (name: string) =>
+headers.findIndex((h: string) =>
+h?.toLowerCase().includes(name)
+);
+
+const formatted = rows.slice(1).map((row: any) => ({
+tracking: row[getIndex('tracking')] || '',
+hub: hub, // vem do select do modal
+inventory_date: inventoryDate,
+aging: row[getIndex('aging')] || '',
+count_type: row[getIndex('count')] || '',
+expected: row[getIndex('expected')] || '',
+on_hold: Number(row[getIndex('on_hold')] || 0),
+created_at: new Date().toISOString(),
+}));
 
         const valid = formatted.filter((i) => i.tracking);
 

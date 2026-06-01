@@ -15,7 +15,8 @@ import {
 } from 'recharts';
 
 export default function ProjectPage() {
-
+  const inputStyle =
+  "border border-gray-300 p-2 rounded w-full bg-white text-gray-800 placeholder-gray-400";
     const router = useRouter(); // 👈 ADICIONA ESSA LINHA
     
     const params = useParams();
@@ -344,35 +345,35 @@ const chartData = paretoData.map((item: any) => {
     placeholder="Líder da análise"
     value={aspForm.leader}
     onChange={(e) => setAspForm({ ...aspForm, leader: e.target.value })}
-    className="border p-2 rounded w-full"
-  />
+    className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
+    />
 
   <input
     placeholder="Categoria (Inbound, Outbound, etc)"
     value={aspForm.category}
     onChange={(e) => setAspForm({ ...aspForm, category: e.target.value })}
-    className="border p-2 rounded w-full"
-  />
+    className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
+    />
 
   <textarea
     placeholder="1) Descrição detalhada do problema"
     value={aspForm.description}
     onChange={(e) => setAspForm({ ...aspForm, description: e.target.value })}
-    className="border p-2 rounded w-full"
-  />
+    className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
+    />
 
   <textarea
     placeholder="2) Meta"
     value={aspForm.goal}
     onChange={(e) => setAspForm({ ...aspForm, goal: e.target.value })}
-    className="border p-2 rounded w-full"
-  />
+    className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
+    />
 
   <textarea
     placeholder="3) Histórico do problema"
     value={aspForm.history}
     onChange={(e) => setAspForm({ ...aspForm, history: e.target.value })}
-    className="border p-2 rounded w-full"
+      className="border border-gray-300 p-2 rounded bg-white text-gray-800 placeholder-gray-400"
   />
 </div>
       {/* PARETO */}

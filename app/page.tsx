@@ -300,7 +300,7 @@ created_at: new Date().toISOString(),
         }
 
         alert('Upload Loss 🚀');
-        fetchLoss();
+        fetchLoss();  
       },
     });
   };
